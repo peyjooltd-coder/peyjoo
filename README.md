@@ -1,6 +1,6 @@
-# Divar Vancouver
+﻿# Divar Vancouver
 
-Metro Vancouver marketplace — React frontend + Express API + SQLite.
+Metro Vancouver marketplace â€” React frontend + Express API + SQLite.
 
 ## Quick start (development)
 
@@ -9,19 +9,19 @@ Metro Vancouver marketplace — React frontend + Express API + SQLite.
 ```bash
 cd server
 npm install
-cp .env.example .env   # optional — .env may already exist
+cp .env.example .env   # optional â€” .env may already exist
 npm run db:seed
 npm run dev
 ```
 
 API: http://localhost:3001/api/health
 
-**Auth:** `ali.rezaei@divarvancouver.ca` / `12345` — or mobile `6045550100` with OTP `12345`
+**Auth:** `ali.rezaei@divarvancouver.ca` / `12345` â€” or mobile `6045550100` with OTP `12345`
 
 | Method | Path | Description |
 |--------|------|-------------|
 | POST | `/api/auth/register` | Create account |
-| POST | `/api/auth/login` | Sign in → JWT |
+| POST | `/api/auth/login` | Sign in â†’ JWT |
 | POST | `/api/auth/logout` | Sign out (client clears token) |
 | DELETE | `/api/auth/account` | Delete account permanently |
 
@@ -33,7 +33,7 @@ npm install
 npm run dev
 ```
 
-App: http://localhost:5173 — requests to `/api` are proxied to the backend.
+App: http://localhost:5173 â€” requests to `/api` are proxied to the backend.
 
 ### Run both
 
@@ -115,9 +115,9 @@ netsh advfirewall firewall add rule name="Divar Web" dir=in action=allow protoco
 
 For production, set real domain/IP origins in `CORS_ORIGINS`.
 
-### Background (بدون CMD باز) + آپدیت خودکار
+### Background (Ø¨Ø¯ÙˆÙ† CMD Ø¨Ø§Ø²) + Ø¢Ù¾Ø¯ÛŒØª Ø®ÙˆØ¯Ú©Ø§Ø±
 
-با **PM2** اپ همیشه در پس‌زمینه اجرا می‌شود؛ با تغییر کد، API و build فرانت خودکار ری‌استارت/به‌روز می‌شوند.
+Ø¨Ø§ **PM2** Ø§Ù¾ Ù‡Ù…ÛŒØ´Ù‡ Ø¯Ø± Ù¾Ø³â€ŒØ²Ù…ÛŒÙ†Ù‡ Ø§Ø¬Ø±Ø§ Ù…ÛŒâ€ŒØ´ÙˆØ¯Ø› Ø¨Ø§ ØªØºÛŒÛŒØ± Ú©Ø¯ØŒ API Ùˆ build ÙØ±Ø§Ù†Øª Ø®ÙˆØ¯Ú©Ø§Ø± Ø±ÛŒâ€ŒØ§Ø³ØªØ§Ø±Øª/Ø¨Ù‡â€ŒØ±ÙˆØ² Ù…ÛŒâ€ŒØ´ÙˆÙ†Ø¯.
 
 ```powershell
 cd C:\Users\Administrator\Documents\divarvanciver\divarvanciver
@@ -125,36 +125,36 @@ npm run fix:sqlite
 npm run db:seed
 npm run build
 
-# یک‌بار — PowerShell به‌عنوان Administrator (برای استارت با روشن شدن ویندوز)
+# ÛŒÚ©â€ŒØ¨Ø§Ø± â€” PowerShell Ø¨Ù‡â€ŒØ¹Ù†ÙˆØ§Ù† Administrator (Ø¨Ø±Ø§ÛŒ Ø§Ø³ØªØ§Ø±Øª Ø¨Ø§ Ø±ÙˆØ´Ù† Ø´Ø¯Ù† ÙˆÛŒÙ†Ø¯ÙˆØ²)
 npm run bg:setup
 ```
 
-| دستور | کار |
+| Ø¯Ø³ØªÙˆØ± | Ú©Ø§Ø± |
 |--------|-----|
-| `npm run bg:status` | وضعیت سرویس‌ها |
-| `npm run bg:logs` | لاگ زنده |
-| `npm run bg:restart` | ری‌استارت همه |
-| `npm run bg:stop` | توقف |
+| `npm run bg:status` | ÙˆØ¶Ø¹ÛŒØª Ø³Ø±ÙˆÛŒØ³â€ŒÙ‡Ø§ |
+| `npm run bg:logs` | Ù„Ø§Ú¯ Ø²Ù†Ø¯Ù‡ |
+| `npm run bg:restart` | Ø±ÛŒâ€ŒØ§Ø³ØªØ§Ø±Øª Ù‡Ù…Ù‡ |
+| `npm run bg:stop` | ØªÙˆÙ‚Ù |
 
-- **وب:** http://142.44.160.190:15173/
-- **API داخلی:** پورت 13001 (از طریق `/api` روی 15173)
+- **ÙˆØ¨:** http://142.44.160.190:15173/
+- **API Ø¯Ø§Ø®Ù„ÛŒ:** Ù¾ÙˆØ±Øª 13001 (Ø§Ø² Ø·Ø±ÛŒÙ‚ `/api` Ø±ÙˆÛŒ 15173)
 
 ## API overview
 
 | Method | Path | Auth | Description |
 |--------|------|------|-------------|
-| GET | `/api/health` | — | Health check |
-| POST | `/api/auth/login` | — | JWT login |
-| GET | `/api/auth/me` | ✓ | Current user |
+| GET | `/api/health` | â€” | Health check |
+| POST | `/api/auth/login` | â€” | JWT login |
+| GET | `/api/auth/me` | âœ“ | Current user |
 | GET | `/api/listings` | optional | All listings |
-| POST | `/api/listings` | ✓ | Create ad |
-| PATCH | `/api/listings/:id` | ✓ | Update own ad |
-| DELETE | `/api/listings/:id` | ✓ | Soft-delete ad |
-| POST | `/api/user/saved/:id/toggle` | ✓ | Save/unsave |
-| POST | `/api/user/compare/:id/toggle` | ✓ | Compare (max 3) |
-| GET/POST/DELETE | `/api/user/alerts` | ✓ | Search alerts |
-| GET/POST | `/api/chat/threads` | ✓ | Dashboard inbox |
-| GET/POST | `/api/pulse/*` | mixed | Pulse™, handshakes, wants |
+| POST | `/api/listings` | âœ“ | Create ad |
+| PATCH | `/api/listings/:id` | âœ“ | Update own ad |
+| DELETE | `/api/listings/:id` | âœ“ | Soft-delete ad |
+| POST | `/api/user/saved/:id/toggle` | âœ“ | Save/unsave |
+| POST | `/api/user/compare/:id/toggle` | âœ“ | Compare (max 3) |
+| GET/POST/DELETE | `/api/user/alerts` | âœ“ | Search alerts |
+| GET/POST | `/api/chat/threads` | âœ“ | Dashboard inbox |
+| GET/POST | `/api/pulse/*` | mixed | Pulseâ„¢, handshakes, wants |
 
 ## Database
 
@@ -176,4 +176,4 @@ npm run bg:setup
 
 - **Frontend:** Vite, React 19, Tailwind v4  
 - **Backend:** Express, better-sqlite3, JWT, Zod  
-- **Features:** Smart search (client), category filters, Pulse™, Handshake, Dashboard chat
+- **Features:** Smart search (client), category filters, Pulseâ„¢, Handshake, Dashboard chat
