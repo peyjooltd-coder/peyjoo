@@ -1,0 +1,21 @@
+{% extends "core/base.html" %}
+{% block content %}
+<div class="top">
+  <div>
+    <h1>داشبورد</h1>
+    <p class="muted">همهٔ جدول‌های اپ روی SQLite زنده. ویرایش اینجا همان دادهٔ سایت را عوض می‌کند.</p>
+  </div>
+  <div style="display:flex; gap:8px;">
+    <a class="btn ghost" href="{% url 'moderation' %}">میز کار</a>
+    <a class="btn" href="{% url 'hamyari-moderation' %}">میز کار همیاری</a>
+  </div>
+</div>
+<div class="grid">
+  {% for card in cards %}
+    <a class="stat" href="{{ card.url }}">
+      <span>{{ card.spec.title }}</span>
+      <b>{{ card.count }}</b>
+    </a>
+  {% endfor %}
+</div>
+{% endblock %}

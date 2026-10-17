@@ -1,0 +1,51 @@
+{
+  "name": "divarvanciver",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "dev:api": "npm run dev --prefix server",
+    "dev:all": "concurrently \"npm run dev:api\" \"npm run dev\"",
+    "build": "vite build",
+    "preview:prod": "vite preview",
+    "start:prod": "concurrently \"npm run start:api\" \"npm run preview:prod\"",
+    "bg:start": "pm2 start ecosystem.config.cjs",
+    "bg:stop": "pm2 stop divar-api divar-web peyjoo-django",
+    "bg:restart": "pm2 restart divar-api divar-web peyjoo-django",
+    "bg:logs": "pm2 logs",
+    "bg:status": "pm2 status",
+    "bg:setup": "powershell -ExecutionPolicy Bypass -File scripts/bg-setup.ps1",
+    "bg:install-startup": "pm2 install pm2-windows-startup && pm2-startup install && pm2 save",
+    "lint": "eslint .",
+    "preview": "vite preview",
+    "db:seed": "npm run db:seed --prefix server",
+    "fix:sqlite": "npm rebuild better-sqlite3 --prefix server",
+    "start:api": "npm run start --prefix server"
+  },
+  "dependencies": {
+    "@capacitor/android": "^8.5.2",
+    "@capacitor/cli": "^8.5.2",
+    "@capacitor/core": "^8.5.2",
+    "firebase": "^12.19.0",
+    "leaflet": "^1.9.4",
+    "lucide-react": "^1.17.0",
+    "maplibre-gl": "^6.9.0",
+    "react": "^19.2.6",
+    "react-dom": "^19.2.6"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@tailwindcss/vite": "^4.3.0",
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "^6.0.1",
+    "concurrently": "^9.2.1",
+    "eslint": "^10.3.0",
+    "eslint-plugin-react-hooks": "^7.1.1",
+    "eslint-plugin-react-refresh": "^0.5.2",
+    "globals": "^17.6.0",
+    "tailwindcss": "^4.3.0",
+    "vite": "^8.0.12"
+  }
+}

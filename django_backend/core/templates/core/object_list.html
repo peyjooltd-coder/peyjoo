@@ -1,0 +1,65 @@
+{% extends "core/base.html" %}
+{% block content %}
+<div class="top">
+  <h1>{{ page_title }}</h1>
+  <div style="display:flex; gap:8px; flex-wrap:wrap;">
+    {% if is_hamyari %}
+      <a class="btn ghost" href="{% url 'hamyari-moderation' %}">میز کار تأیید</a>
+    {% elif is_listings %}
+      <a class="btn ghost" href="{% url 'moderation' %}">میز کار تأیید</a>
+    {% endif %}
+    <a class="btn" href="{{ create_url }}">جدید</a>
+  </div>
+</div>
+
+{% if status_tabs %}
+  <div class="status-tabs">
+    {% for tab in status_tabs %}
+      <a class="status-tab {% if tab.active %}is-on{% endif %}" href="{{ tab.url }}">
+        {{ tab.label }} <b>{{ tab.count }}</b>
+      </a>
+    {% endfor %}
+  </div>
+{% endif %}
+
+<form class="search" method="get">
+  {% if status %}<input type="hidden" name="status" value="{{ status }}">{% endif %}
+  <input class="input" name="q" value="{{ q }}" placeholder="جستجو">
+  <button class="btn ghost" type="submit">بگرد</button>
+</form>
+<div class="card" style="margin-top:12px; overflow:auto;">
+  <table>
+    <thead>
+      <tr>
+        <th>عنوان</th>
+        {% for name, label in columns %}<th>{{ label }}</th>{% endfor %}
+        {% if moderate_kind %}<th></th>{% endif %}
+      </tr>
+    </thead>
+    <tbody>
+      {% for row in rows %}
+        <tr>
+          <td><a href="{{ row.url }}">{{ row.title }}</a></td>
+          {% for cell in row.cells %}<td>{{ cell }}</td>{% endfor %}
+          {% if moderate_kind %}
+            <td>{% include "core/moderation_actions.html" with kind=moderate_kind row=row.obj %}</td>
+          {% endif %}
+        </tr>
+      {% empty %}
+        <tr><td colspan="8" class="muted">چیزی در این وضعیت نیست.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% if is_paginated %}
+  <div class="pager">
+    {% if page_obj.has_previous %}
+      <a class="btn ghost" href="?page={{ page_obj.previous_page_number }}{% if status %}&status={{ status }}{% endif %}&q={{ q }}">قبلی</a>
+    {% endif %}
+    <span class="muted">{{ page_obj.number }} / {{ page_obj.paginator.num_pages }}</span>
+    {% if page_obj.has_next %}
+      <a class="btn ghost" href="?page={{ page_obj.next_page_number }}{% if status %}&status={{ status }}{% endif %}&q={{ q }}">بعدی</a>
+    {% endif %}
+  </div>
+{% endif %}
+{% endblock %}

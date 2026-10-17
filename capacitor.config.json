@@ -1,0 +1,9 @@
+{
+  "appId": "com.peyjoo.app",
+  "appName": "PeyJoo",
+  "webDir": "dist",
+  "server": {
+    "url": "https://peyjoo.com",
+    "androidScheme": "https"
+  }
+}

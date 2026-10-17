@@ -1,0 +1,33 @@
+{% extends "core/base.html" %}
+{% block content %}
+<div class="top">
+  <h1>{% if object %}ویرایش{% else %}جدید{% endif %} · {{ page_title }}</h1>
+  <a class="btn ghost" href="{{ list_url }}">بازگشت</a>
+</div>
+{% if is_listing and media %}
+<div class="card" style="margin-bottom:16px;">
+  <h2 style="margin:0 0 10px; font-size:16px;">عکس و ویدیو</h2>
+  <div class="gallery">
+    {% for item in media %}
+      {% if item.type == 'video' %}
+        <video class="gallery-item" controls playsinline {% if item.poster %}poster="{{ item.poster }}"{% endif %} src="{{ item.url }}"></video>
+      {% else %}
+        <img class="gallery-item" src="{{ item.url }}" alt="">
+      {% endif %}
+    {% endfor %}
+  </div>
+</div>
+{% endif %}
+<form class="card fields" method="post">
+  {% csrf_token %}
+  {{ form.non_field_errors }}
+  {% for field in form %}
+    <label>
+      {{ field.label }}
+      {{ field }}
+      {% if field.errors %}<span class="msg err">{{ field.errors|striptags }}</span>{% endif %}
+    </label>
+  {% endfor %}
+  <button class="btn" type="submit">ذخیره</button>
+</form>
+{% endblock %}

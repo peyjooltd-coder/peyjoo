@@ -1,0 +1,43 @@
+# Dependencies
+node_modules/
+server/node_modules/
+django_backend/.venv/
+
+# Build / cache
+dist/
+*.log
+.DS_Store
+__pycache__/
+*.pyc
+.gradle/
+android/.gradle/
+android/app/build/
+android/build/
+android/local.properties
+android/capacitor-cordova-android-plugins/build/
+.idea/
+.vscode/
+*.iml
+
+# Env & secrets
+.env
+.env.*
+!.env.example
+!.env.deploy.example
+server/.env
+server/.env.*
+!server/.env.example
+android/keystore.properties
+*.jks
+*.keystore
+google-services.json
+
+# Runtime / local data
+server/data/
+server/data/uploads/
+django_backend/admin.sqlite3
+django_backend/**/db.sqlite3
+
+# PM2 / OS
+.pm2/
+Thumbs.db

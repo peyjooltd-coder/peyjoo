@@ -1,0 +1,29 @@
+<form method="post" action="{% url 'moderate' %}">
+  {% csrf_token %}
+  <input type="hidden" name="kind" value="{{ kind }}">
+  <input type="hidden" name="id" value="{{ row.pk }}">
+  <input type="hidden" name="next" value="{{ request.get_full_path }}">
+  {% if row.status == 'active' %}
+    <span class="status-pill is-active">منتشر شده</span>
+    {% if kind == 'listing' %}
+      <button class="btn small ghost" name="op" value="ladder" type="submit">نردبان</button>
+    {% endif %}
+    <button class="btn small danger" name="op" value="delete" type="submit">حذف</button>
+  {% elif row.status == 'pending' %}
+    <span class="status-pill is-pending">در انتظار</span>
+    <button class="btn small" name="op" value="approve" type="submit">تأیید و انتشار</button>
+    <button class="btn small ghost" name="op" value="reject" type="submit">تأیید نشد</button>
+    <button class="btn small danger" name="op" value="delete" type="submit">حذف</button>
+  {% elif row.status == 'rejected' %}
+    <span class="status-pill is-rejected">تأیید نشده</span>
+    <button class="btn small" name="op" value="approve" type="submit">تأیید و انتشار</button>
+    <button class="btn small danger" name="op" value="delete" type="submit">حذف</button>
+  {% elif row.status == 'deleted' %}
+    <span class="status-pill is-deleted">حذف شده</span>
+    <button class="btn small" name="op" value="approve" type="submit">بازگردانی و انتشار</button>
+  {% else %}
+    <span class="status-pill">{{ row.status }}</span>
+    <button class="btn small" name="op" value="approve" type="submit">تأیید و انتشار</button>
+    <button class="btn small danger" name="op" value="delete" type="submit">حذف</button>
+  {% endif %}
+</form>

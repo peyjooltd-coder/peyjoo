@@ -1,0 +1,201 @@
+{% extends "core/base.html" %}
+{% block content %}
+<div class="top">
+  <div>
+    <h1>میز کار ادمین</h1>
+    <p class="muted">آگهی‌ها بر اساس وضعیت جدا شده‌اند. تأیید، رد، انتشار و حذف همین‌جا انجام می‌شود.</p>
+  </div>
+  <a class="btn" href="{% url 'listings-create' %}">ثبت آگهی</a>
+</div>
+
+<div class="status-summary">
+  <a class="status-chip is-pending" href="{% url 'listings-list' %}?status=pending">آگهی در انتظار <b>{{ counts.pending }}</b></a>
+  <a class="status-chip is-active" href="{% url 'listings-list' %}?status=active">آگهی منتشر <b>{{ counts.active }}</b></a>
+  <a class="status-chip is-rejected" href="{% url 'listings-list' %}?status=rejected">آگهی ردشده <b>{{ counts.rejected }}</b></a>
+  <a class="status-chip is-pending" href="{% url 'hamyari-moderation' %}">همیاری در انتظار <b>{{ hamyari_counts.pending }}</b></a>
+  <a class="status-chip is-active" href="{% url 'hamyari-moderation' %}?status=active">همیاری منتشر <b>{{ hamyari_counts.active }}</b></a>
+</div>
+
+<section class="card" style="margin-bottom:16px; border:1px solid #fdba74;">
+  <div class="section-head">
+    <h2>همیاری — در انتظار تأیید و انتشار <span class="count-badge">{{ hamyari_counts.pending }}</span></h2>
+    <a class="btn small" href="{% url 'hamyari-moderation' %}">مدیریت همیاری</a>
+  </div>
+  <p class="muted" style="margin:0 0 12px;">این آگهی‌ها تا تأیید شما در اپ منتشر نمی‌شوند.</p>
+  <table>
+    <thead><tr><th>عنوان / متن</th><th>کاربر</th><th>دسته</th><th></th></tr></thead>
+    <tbody>
+      {% for row in hamyari_pending %}
+        <tr>
+          <td>
+            <a href="{% url 'hamyari-posts-detail' row.pk %}">{% firstof row.title row.body|truncatechars:80 %}</a>
+            {% if row.title and row.body %}<p class="muted">{{ row.body|truncatechars:140 }}</p>{% endif %}
+          </td>
+          <td>{{ row.user }}</td>
+          <td>{{ row.category }}</td>
+          <td>{% include "core/moderation_actions.html" with kind="hamyari" row=row %}</td>
+        </tr>
+      {% empty %}
+        <tr><td colspan="4" class="muted">پست همیاری در انتظار نیست.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</section>
+
+<section class="card" style="margin-bottom:16px;">
+  <div class="section-head">
+    <h2>در انتظار تأیید <span class="count-badge">{{ counts.pending }}</span></h2>
+    <a class="btn ghost small" href="{% url 'listings-list' %}?status=pending">همه</a>
+  </div>
+  <table>
+    <thead><tr><th>عنوان</th><th>کاربر</th><th>دسته</th><th></th></tr></thead>
+    <tbody>
+      {% for row in pending %}
+        <tr>
+          <td>
+            {% if row.image %}<img class="thumb" src="{{ row.image }}" alt="">{% endif %}
+            <a href="{% url 'listings-detail' row.pk %}">{{ row.title }}</a>
+            {% if row.description %}<p class="muted">{{ row.description|truncatechars:140 }}</p>{% endif %}
+          </td>
+          <td>{{ row.user }}</td>
+          <td>{{ row.category }}</td>
+          <td>{% include "core/moderation_actions.html" with kind="listing" row=row %}</td>
+        </tr>
+      {% empty %}
+        <tr><td colspan="4" class="muted">آگهی در انتظار نیست.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</section>
+
+<section class="card" style="margin-bottom:16px;">
+  <div class="section-head">
+    <h2>منتشر شده <span class="count-badge">{{ counts.active }}</span></h2>
+    <a class="btn ghost small" href="{% url 'listings-list' %}?status=active">همه</a>
+  </div>
+  <table>
+    <thead><tr><th>عنوان</th><th>ویژه</th><th>دسته</th><th></th></tr></thead>
+    <tbody>
+      {% for row in live %}
+        <tr>
+          <td>
+            {% if row.image %}<img class="thumb" src="{{ row.image }}" alt="">{% endif %}
+            <a href="{% url 'listings-detail' row.pk %}">{{ row.title }}</a>
+          </td>
+          <td>{% if row.is_pro %}بله{% else %}خیر{% endif %}</td>
+          <td>{{ row.category }}</td>
+          <td>{% include "core/moderation_actions.html" with kind="listing" row=row %}</td>
+        </tr>
+      {% empty %}
+        <tr><td colspan="4" class="muted">آگهی منتشرشده‌ای نیست.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</section>
+
+<section class="card" style="margin-bottom:16px;">
+  <div class="section-head">
+    <h2>تأیید نشده <span class="count-badge">{{ counts.rejected }}</span></h2>
+    <a class="btn ghost small" href="{% url 'listings-list' %}?status=rejected">همه</a>
+  </div>
+  <table>
+    <thead><tr><th>عنوان</th><th>کاربر</th><th>دسته</th><th></th></tr></thead>
+    <tbody>
+      {% for row in rejected %}
+        <tr>
+          <td>
+            {% if row.image %}<img class="thumb" src="{{ row.image }}" alt="">{% endif %}
+            <a href="{% url 'listings-detail' row.pk %}">{{ row.title }}</a>
+          </td>
+          <td>{{ row.user }}</td>
+          <td>{{ row.category }}</td>
+          <td>{% include "core/moderation_actions.html" with kind="listing" row=row %}</td>
+        </tr>
+      {% empty %}
+        <tr><td colspan="4" class="muted">آگهی تأییدنشده‌ای نیست.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</section>
+
+<section class="card" style="margin-bottom:16px;">
+  <div class="section-head">
+    <h2>حذف شده <span class="count-badge">{{ counts.deleted }}</span></h2>
+    <a class="btn ghost small" href="{% url 'listings-list' %}?status=deleted">همه</a>
+  </div>
+  <table>
+    <thead><tr><th>عنوان</th><th>کاربر</th><th>دسته</th><th></th></tr></thead>
+    <tbody>
+      {% for row in deleted %}
+        <tr>
+          <td>
+            {% if row.image %}<img class="thumb" src="{{ row.image }}" alt="">{% endif %}
+            <a href="{% url 'listings-detail' row.pk %}">{{ row.title }}</a>
+          </td>
+          <td>{{ row.user }}</td>
+          <td>{{ row.category }}</td>
+          <td>{% include "core/moderation_actions.html" with kind="listing" row=row %}</td>
+        </tr>
+      {% empty %}
+        <tr><td colspan="4" class="muted">آگهی حذف‌شده‌ای نیست.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</section>
+
+<section class="card" style="margin-bottom:16px;">
+  <h2>گزارش‌های باز</h2>
+  <table>
+    <thead><tr><th>آگهی</th><th>دلیل</th><th>گزارش‌دهنده</th><th></th></tr></thead>
+    <tbody>
+      {% for row in reports %}
+        <tr>
+          <td>{{ row.listing }}</td>
+          <td>{{ row.reason }}{% if row.details %} — {{ row.details }}{% endif %}</td>
+          <td>{{ row.user }}</td>
+          <td>
+            <form method="post" action="{% url 'moderate' %}">
+              {% csrf_token %}
+              <input type="hidden" name="kind" value="report">
+              <input type="hidden" name="id" value="{{ row.pk }}">
+              <input type="hidden" name="next" value="{{ request.path }}">
+              <button class="btn small" name="op" value="approve" type="submit">تأیید آگهی</button>
+              <button class="btn small danger" name="op" value="delete" type="submit">حذف آگهی</button>
+              <button class="btn small ghost" name="op" value="close" type="submit">بستن گزارش</button>
+            </form>
+          </td>
+        </tr>
+      {% empty %}
+        <tr><td colspan="4" class="muted">گزارش بازی نیست.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</section>
+
+<section class="card">
+  <h2>کاربران تأییدنشده</h2>
+  <table>
+    <thead><tr><th>نام</th><th>تلفن</th><th>شهر</th><th></th></tr></thead>
+    <tbody>
+      {% for row in unverified %}
+        <tr>
+          <td>{{ row.name }}</td>
+          <td dir="ltr">{{ row.phone }}</td>
+          <td>{{ row.city }}</td>
+          <td>
+            <form method="post" action="{% url 'moderate' %}">
+              {% csrf_token %}
+              <input type="hidden" name="kind" value="member">
+              <input type="hidden" name="id" value="{{ row.pk }}">
+              <input type="hidden" name="next" value="{{ request.path }}">
+              <button class="btn small" name="op" value="verify" type="submit">وریفای و تأیید</button>
+            </form>
+          </td>
+        </tr>
+      {% empty %}
+        <tr><td colspan="4" class="muted">همهٔ کاربران تأیید شده‌اند.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</section>
+{% endblock %}

@@ -1,0 +1,14 @@
+{% extends "core/base.html" %}
+{% block login %}
+<form class="login-card" method="post">
+  {% csrf_token %}
+  <h1>ورود مدیر PeyJoo</h1>
+  <p class="muted">همان اطلاعات زندهٔ اپ اینجاست. این ورود جدا از حساب کاربران اپ است.</p>
+  {% if form.errors %}<p class="msg err">نام کاربری یا رمز درست نیست.</p>{% endif %}
+  <div class="fields">
+    <label>نام کاربری <input class="input" name="username" autofocus required></label>
+    <label>رمز <input class="input" type="password" name="password" required></label>
+    <button class="btn" type="submit">ورود</button>
+  </div>
+</form>
+{% endblock %}

@@ -1,0 +1,133 @@
+{% extends "core/base.html" %}
+{% block content %}
+<div class="top">
+  <div>
+    <h1>آگهی‌های همیاری</h1>
+    <p class="muted">مثل آگهی‌های بازار: تأیید، رد، انتشار و حذف همین‌جا انجام می‌شود. تا قبل از تأیید، در فید همیاری دیده نمی‌شود.</p>
+  </div>
+  <div style="display:flex; gap:8px; flex-wrap:wrap;">
+    <a class="btn ghost" href="{% url 'moderation' %}">میز کار کلی</a>
+    <a class="btn" href="{% url 'hamyari-posts-list' %}?status=pending">لیست کامل</a>
+  </div>
+</div>
+
+<div class="status-summary">
+  <a class="status-chip is-pending" href="{% url 'hamyari-posts-list' %}?status=pending">در انتظار تأیید <b>{{ counts.pending }}</b></a>
+  <a class="status-chip is-active" href="{% url 'hamyari-posts-list' %}?status=active">منتشر شده <b>{{ counts.active }}</b></a>
+  <a class="status-chip is-rejected" href="{% url 'hamyari-posts-list' %}?status=rejected">تأیید نشده <b>{{ counts.rejected }}</b></a>
+  <a class="status-chip is-deleted" href="{% url 'hamyari-posts-list' %}?status=deleted">حذف شده <b>{{ counts.deleted }}</b></a>
+  <a class="status-chip" href="{% url 'hamyari-posts-list' %}?status=all">همه <b>{{ counts.all }}</b></a>
+</div>
+
+<section class="card" style="margin-bottom:16px; border:1px solid #fdba74;">
+  <div class="section-head">
+    <h2>در انتظار تأیید <span class="count-badge">{{ counts.pending }}</span></h2>
+    <a class="btn ghost small" href="{% url 'hamyari-posts-list' %}?status=pending">همه</a>
+  </div>
+  <p class="muted" style="margin:0 0 12px;">این آگهی‌ها تا تأیید شما در اپ منتشر نمی‌شوند.</p>
+  <table>
+    <thead><tr><th>عنوان / متن</th><th>کاربر</th><th>دسته</th><th>اقدام</th></tr></thead>
+    <tbody>
+      {% for row in pending %}
+        <tr>
+          <td>
+            {% if row.preview %}
+              {% if row.preview.type == 'video' %}
+                <video class="thumb" muted playsinline {% if row.preview.poster %}poster="{{ row.preview.poster }}"{% endif %} src="{{ row.preview.url }}"></video>
+              {% else %}
+                <img class="thumb" src="{{ row.preview.url }}" alt="">
+              {% endif %}
+            {% endif %}
+            <a href="{% url 'hamyari-posts-detail' row.pk %}">{% firstof row.title row.body|truncatechars:80 %}</a>
+            {% if row.title and row.body %}<p class="muted">{{ row.body|truncatechars:140 }}</p>{% endif %}
+          </td>
+          <td>{{ row.user }}</td>
+          <td>{{ row.category }}</td>
+          <td>{% include "core/moderation_actions.html" with kind="hamyari" row=row %}</td>
+        </tr>
+      {% empty %}
+        <tr><td colspan="4" class="muted">آگهی همیاری در انتظار نیست.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</section>
+
+<section class="card" style="margin-bottom:16px;">
+  <div class="section-head">
+    <h2>منتشر شده <span class="count-badge">{{ counts.active }}</span></h2>
+    <a class="btn ghost small" href="{% url 'hamyari-posts-list' %}?status=active">همه</a>
+  </div>
+  <table>
+    <thead><tr><th>عنوان / متن</th><th>کاربر</th><th>دسته</th><th>اقدام</th></tr></thead>
+    <tbody>
+      {% for row in live %}
+        <tr>
+          <td>
+            {% if row.preview %}
+              {% if row.preview.type == 'video' %}
+                <video class="thumb" muted playsinline {% if row.preview.poster %}poster="{{ row.preview.poster }}"{% endif %} src="{{ row.preview.url }}"></video>
+              {% else %}
+                <img class="thumb" src="{{ row.preview.url }}" alt="">
+              {% endif %}
+            {% endif %}
+            <a href="{% url 'hamyari-posts-detail' row.pk %}">{% firstof row.title row.body|truncatechars:80 %}</a>
+          </td>
+          <td>{{ row.user }}</td>
+          <td>{{ row.category }}</td>
+          <td>{% include "core/moderation_actions.html" with kind="hamyari" row=row %}</td>
+        </tr>
+      {% empty %}
+        <tr><td colspan="4" class="muted">آگهی همیاری منتشرشده‌ای نیست.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</section>
+
+<section class="card" style="margin-bottom:16px;">
+  <div class="section-head">
+    <h2>تأیید نشده <span class="count-badge">{{ counts.rejected }}</span></h2>
+    <a class="btn ghost small" href="{% url 'hamyari-posts-list' %}?status=rejected">همه</a>
+  </div>
+  <table>
+    <thead><tr><th>عنوان / متن</th><th>کاربر</th><th>دسته</th><th>اقدام</th></tr></thead>
+    <tbody>
+      {% for row in rejected %}
+        <tr>
+          <td>
+            <a href="{% url 'hamyari-posts-detail' row.pk %}">{% firstof row.title row.body|truncatechars:80 %}</a>
+          </td>
+          <td>{{ row.user }}</td>
+          <td>{{ row.category }}</td>
+          <td>{% include "core/moderation_actions.html" with kind="hamyari" row=row %}</td>
+        </tr>
+      {% empty %}
+        <tr><td colspan="4" class="muted">آگهی همیاری تأییدنشده‌ای نیست.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</section>
+
+<section class="card">
+  <div class="section-head">
+    <h2>حذف شده <span class="count-badge">{{ counts.deleted }}</span></h2>
+    <a class="btn ghost small" href="{% url 'hamyari-posts-list' %}?status=deleted">همه</a>
+  </div>
+  <table>
+    <thead><tr><th>عنوان / متن</th><th>کاربر</th><th>دسته</th><th>اقدام</th></tr></thead>
+    <tbody>
+      {% for row in deleted %}
+        <tr>
+          <td>
+            <a href="{% url 'hamyari-posts-detail' row.pk %}">{% firstof row.title row.body|truncatechars:80 %}</a>
+          </td>
+          <td>{{ row.user }}</td>
+          <td>{{ row.category }}</td>
+          <td>{% include "core/moderation_actions.html" with kind="hamyari" row=row %}</td>
+        </tr>
+      {% empty %}
+        <tr><td colspan="4" class="muted">آگهی همیاری حذف‌شده‌ای نیست.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</section>
+{% endblock %}

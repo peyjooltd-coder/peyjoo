@@ -1,0 +1,71 @@
+{% extends "core/base.html" %}
+{% block content %}
+<div class="top">
+  <h1>{{ obj }}</h1>
+  <div style="display:flex; gap:8px;">
+    <a class="btn ghost" href="{{ list_url }}">لیست</a>
+    <a class="btn" href="{{ edit_url }}">ویرایش</a>
+    <a class="btn danger" href="{{ delete_url }}">حذف</a>
+  </div>
+</div>
+{% if is_hamyari %}
+<div class="card" style="margin-bottom:16px;">
+  <div class="top" style="margin-bottom:10px;">
+    <h2 style="margin:0; font-size:16px;">بررسی آگهی همیاری</h2>
+    {% include "core/moderation_actions.html" with kind="hamyari" row=obj %}
+  </div>
+  <p class="muted">تا قبل از تأیید، این آگهی در فید همیاری نمایش داده نمی‌شود.</p>
+  {% if media %}
+    <div class="gallery">
+      {% for item in media %}
+        {% if item.type == 'video' %}
+          <video class="gallery-item" controls playsinline {% if item.poster %}poster="{{ item.poster }}"{% endif %} src="{{ item.url }}"></video>
+        {% else %}
+          <img class="gallery-item" src="{{ item.url }}" alt="">
+        {% endif %}
+      {% endfor %}
+    </div>
+  {% else %}
+    <p class="muted">این آگهی عکس یا ویدیو ندارد.</p>
+  {% endif %}
+  <p style="white-space:pre-wrap;"><strong>{% firstof obj.title "بدون عنوان" %}</strong></p>
+  <p style="white-space:pre-wrap;">{{ obj.body|default:"بدون متن" }}</p>
+</div>
+{% endif %}
+{% if is_listing %}
+<div class="card" style="margin-bottom:16px;">
+  <div class="top" style="margin-bottom:10px;">
+    <h2 style="margin:0; font-size:16px;">بررسی آگهی</h2>
+    {% include "core/moderation_actions.html" with kind="listing" row=obj %}
+  </div>
+  {% if media %}
+    <div class="gallery">
+      {% for item in media %}
+        {% if item.type == 'video' %}
+          <video class="gallery-item" controls playsinline {% if item.poster %}poster="{{ item.poster }}"{% endif %} src="{{ item.url }}"></video>
+        {% else %}
+          <img class="gallery-item" src="{{ item.url }}" alt="">
+        {% endif %}
+      {% endfor %}
+    </div>
+  {% else %}
+    <p class="muted">این آگهی عکس یا ویدیو ندارد.</p>
+  {% endif %}
+  <p style="white-space:pre-wrap;">{{ obj.description|default:"بدون توضیح" }}</p>
+  {% if attrs %}
+    <table>
+      {% for key, value in attrs %}
+        <tr><th style="width:180px;">{{ key }}</th><td>{{ value }}</td></tr>
+      {% endfor %}
+    </table>
+  {% endif %}
+</div>
+{% endif %}
+<div class="card">
+  <table>
+    {% for label, value in field_rows %}
+      <tr><th style="width:180px;">{{ label }}</th><td style="white-space:pre-wrap;">{{ value }}</td></tr>
+    {% endfor %}
+  </table>
+</div>
+{% endblock %}

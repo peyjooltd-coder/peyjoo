@@ -1,0 +1,29 @@
+services:
+  api:
+    build:
+      context: .
+      dockerfile: server/Dockerfile
+    ports:
+      - "${API_HOST_PORT:-13001}:3001"
+    environment:
+      NODE_ENV: production
+      PORT: 3001
+      DATABASE_PATH: /app/data/divar.db
+      JWT_SECRET: ${JWT_SECRET:-change-me-in-production}
+      CORS_ORIGINS: ${CORS_ORIGINS:-http://localhost:15173,http://127.0.0.1:15173,http://142.44.160.190:15173}
+    volumes:
+      - api-data:/app/data
+    restart: unless-stopped
+
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile.web
+    ports:
+      - "${WEB_HOST_PORT:-15173}:80"
+    depends_on:
+      - api
+    restart: unless-stopped
+
+volumes:
+  api-data:

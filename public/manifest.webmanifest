@@ -1,0 +1,27 @@
+{
+  "name": "PeyJoo — Divar Vancouver",
+  "short_name": "PeyJoo",
+  "description": "Metro Vancouver marketplace — PeyJoo / Divar Vancouver",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#f2f3f5",
+  "theme_color": "#f2f3f5",
+  "lang": "fa",
+  "dir": "rtl",
+  "icons": [
+    {
+      "src": "/logo.jpeg",
+      "sizes": "512x512",
+      "type": "image/jpeg",
+      "purpose": "any"
+    },
+    {
+      "src": "/logo.jpeg",
+      "sizes": "192x192",
+      "type": "image/jpeg",
+      "purpose": "any"
+    }
+  ]
+}

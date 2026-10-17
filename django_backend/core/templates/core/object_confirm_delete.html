@@ -1,0 +1,12 @@
+{% extends "core/base.html" %}
+{% block content %}
+<div class="card">
+  <h1>حذف شود؟</h1>
+  <p>{{ obj }}</p>
+  <form method="post" style="display:flex; gap:8px;">
+    {% csrf_token %}
+    <button class="btn danger" type="submit">حذف</button>
+    <a class="btn ghost" href="{{ list_url }}">انصراف</a>
+  </form>
+</div>
+{% endblock %}
