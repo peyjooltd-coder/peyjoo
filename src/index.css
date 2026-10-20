@@ -8301,28 +8301,28 @@ body:has(.auth-gate-overlay) .mobile-bottom-nav-persian {
   text-align: center;
   margin-top: 4px;
 }
-/* Empty create-profile card: pin to vertical center of the dating body */
+/* Empty create-profile card: vertical center (JS also sets inline flex fallback) */
 .dating-profile-panel.is-empty,
 .fb-dating-my-profile.is-empty {
-  position: relative;
-  flex: 1 1 auto;
-  min-height: 0;
-  height: 100%;
-  overflow: hidden;
-  display: block;
-  padding: 0 14px;
-  padding-top: env(safe-area-inset-top, 0px);
+  position: relative !important;
+  flex: 1 1 auto !important;
+  min-height: 0 !important;
+  height: 100% !important;
+  overflow: hidden !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 16px 14px !important;
+  padding-top: max(16px, env(safe-area-inset-top, 0px)) !important;
 }
 .dating-profile-panel.is-empty .dating-profile-empty,
 .fb-dating-my-profile.is-empty .dating-profile-empty {
-  position: absolute;
-  left: 14px;
-  right: 14px;
-  top: 50%;
-  transform: translateY(-50%);
-  margin: 0;
-  width: auto;
-  max-width: none;
+  position: static !important;
+  transform: none !important;
+  margin: 0 !important;
+  width: 100%;
+  max-width: 360px;
   box-sizing: border-box;
   display: flex;
   flex-direction: column;

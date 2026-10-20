@@ -676,7 +676,20 @@ export default function DatingPage() {
         )}
 
         {tab === 'profile' && (
-          <div className={`dating-profile-panel fb-dating-my-profile${myProfile ? '' : ' is-empty'}`}>
+          <div
+            className={`dating-profile-panel fb-dating-my-profile${myProfile ? '' : ' is-empty'}`}
+            style={myProfile ? undefined : {
+              position: 'relative',
+              flex: 1,
+              minHeight: 0,
+              height: '100%',
+              overflow: 'hidden',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              padding: '16px 14px',
+            }}
+          >
             {myProfile ? (
               <div className="dating-profile-card">
                 <img
@@ -719,7 +732,15 @@ export default function DatingPage() {
                 </button>
               </div>
             ) : (
-              <div className="dating-profile-empty">
+              <div
+                className="dating-profile-empty"
+                style={{
+                  width: '100%',
+                  maxWidth: 360,
+                  margin: 0,
+                  flexShrink: 0,
+                }}
+              >
                 <UserRound className="w-10 h-10 text-divar-muted" />
                 <h2>{t('datingNoProfileYet')}</h2>
                 <p>{t('datingProfileHint')}</p>
