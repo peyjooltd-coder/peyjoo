@@ -8425,12 +8425,6 @@ body:has(.auth-gate-overlay) .mobile-bottom-nav-persian {
   font-size: 18px;
   font-weight: 800;
 }
-.dating-profile-empty {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 10px;
-}
 .dating-profile-empty p {
   margin: 0;
   font-size: 13px;
