@@ -120,7 +120,7 @@ function AdDetailView({
               <span>{t('hamyariAdvertiser')}</span>
             </div>
             <img
-              src={post.authorAvatar || `/logo.jpeg?v=5`}
+              src={post.authorAvatar || `/logo.jpeg?v=6`}
               alt=""
               className="hamyari-detail-seller-avatar"
             />
@@ -145,7 +145,7 @@ function AdDetailView({
                 )
                 return (
                   <div key={c.id} className="hamyari-comment">
-                    <img src={c.authorAvatar || `/logo.jpeg?v=5`} alt="" />
+                    <img src={c.authorAvatar || `/logo.jpeg?v=6`} alt="" />
                     <div className="hamyari-comment-col">
                       <div className="hamyari-comment-bubble">
                         <div className="hamyari-comment-bubble-top">
@@ -631,7 +631,7 @@ export default function HamyariPage() {
             role="button"
             tabIndex={0}
           >
-            <img src={user?.avatar || '/logo.jpeg?v=5'} alt="" />
+            <img src={user?.avatar || '/logo.jpeg?v=6'} alt="" />
             <div className="li-news-composer-input">{t('hamyariWhatsOnMind')}</div>
             <Plus className="w-4 h-4 text-divar-muted" />
           </div>
@@ -688,7 +688,7 @@ export default function HamyariPage() {
             <>
               <div className="hamyari-profile-card">
                 <img
-                  src={user?.avatar || `/logo.jpeg?v=5`}
+                  src={user?.avatar || `/logo.jpeg?v=6`}
                   alt=""
                   className="hamyari-profile-avatar"
                 />

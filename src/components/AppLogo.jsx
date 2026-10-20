@@ -15,7 +15,7 @@ export default function AppLogo({ className = 'w-14 h-14', rounded = 'rounded-2x
 
   return (
     <img
-      src="/logo.jpeg?v=5"
+      src="/logo.jpeg?v=6"
       alt={lang === 'fa' ? 'پی جو' : 'PeyJoo'}
       className={`${className} ${rounded} object-contain shadow-[var(--shadow-red)] bg-white`}
       onError={() => setFailed(true)}

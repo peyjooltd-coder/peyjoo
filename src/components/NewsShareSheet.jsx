@@ -25,7 +25,7 @@ function buildContacts(chatThreads, listings) {
     map.set(key, {
       key,
       name: th.otherName,
-      avatar: th.otherAvatar || `/logo.jpeg?v=5`,
+      avatar: th.otherAvatar || `/logo.jpeg?v=6`,
       threadId: th.id,
       listingId: th.listingId,
     })
@@ -41,7 +41,7 @@ function buildContacts(chatThreads, listings) {
     map.set(key, {
       key,
       name: l.seller,
-      avatar: l.sellerAvatar || `/logo.jpeg?v=5`,
+      avatar: l.sellerAvatar || `/logo.jpeg?v=6`,
       listingId: l.id,
     })
   }

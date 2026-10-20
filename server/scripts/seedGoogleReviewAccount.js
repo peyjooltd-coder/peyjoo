@@ -10,7 +10,7 @@ const db = new Database(dbPath)
 const phone = '6040000000'
 const email = `p${phone}@divar.phone`
 const name = 'Test Account'
-const avatar = '/logo.jpeg?v=5'
+const avatar = '/logo.jpeg?v=6'
 const hash = bcrypt.hashSync('google-play-review', 10)
 
 const existing = db.prepare('SELECT id, name, phone FROM users WHERE phone = ? OR email = ?').get(phone, email)

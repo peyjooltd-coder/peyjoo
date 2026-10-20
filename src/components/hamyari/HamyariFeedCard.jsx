@@ -97,7 +97,7 @@ export default function HamyariFeedCard({
       <header className="li-news-head">
         <button type="button" className="li-news-author-btn" onClick={onOpen}>
           <img
-            src={post.authorAvatar || `/logo.jpeg?v=5`}
+            src={post.authorAvatar || `/logo.jpeg?v=6`}
             alt=""
             className="li-news-avatar"
           />

@@ -141,7 +141,7 @@ export default function HamyariMessenger({
             <ArrowRight className={`w-5 h-5 ${isRtl ? '' : 'rotate-180'}`} />
           </button>
           <div className="hamyari-msg-peer">
-            <img src={activeThread.otherAvatar || `/logo.jpeg?v=5`} alt="" />
+            <img src={activeThread.otherAvatar || `/logo.jpeg?v=6`} alt="" />
             <div>
               <strong>{activeThread.otherName}</strong>
               <span>{t('hamyariMessengerHint')}</span>
@@ -221,7 +221,7 @@ export default function HamyariMessenger({
           const last = lastMessage(th)
           return (
             <button key={th.id} type="button" className="hamyari-msg-thread" onClick={() => setActiveId(th.id)}>
-              <img src={th.otherAvatar || `/logo.jpeg?v=5`} alt="" />
+              <img src={th.otherAvatar || `/logo.jpeg?v=6`} alt="" />
               <div className="hamyari-msg-thread-meta">
                 <div className="hamyari-msg-thread-top">
                   <strong>{th.otherName}</strong>

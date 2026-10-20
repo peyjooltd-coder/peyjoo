@@ -18,7 +18,7 @@ export default function Footer() {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
           <div className="col-span-2 md:col-span-1">
             <div className="flex items-center gap-2.5 mb-4">
-              <img src="/logo.jpeg?v=5" alt="PeyJoo" className="w-10 h-10 rounded-lg object-cover shadow-sm bg-white" />
+              <img src="/logo.jpeg?v=6" alt="PeyJoo" className="w-10 h-10 rounded-lg object-cover shadow-sm bg-white" />
               <div>
                 <p className="font-bold text-divar-text">{lang === 'fa' ? 'پی جو · PeyJoo' : 'PeyJoo'}</p>
                 <p className="text-[11px] text-divar-muted">{lang === 'fa' ? 'دیوار ونکوور · Greater Vancouver' : 'Divar Vancouver · Greater Vancouver'}</p>

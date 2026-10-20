@@ -1,5 +1,5 @@
 /** Default profile image until the user uploads their own photo. */
-export const PEJO_DEFAULT_AVATAR = '/logo.jpeg?v=5'
+export const PEJO_DEFAULT_AVATAR = '/logo.jpeg?v=6'
 
 export function userAvatar(url) {
   const src = String(url || '').trim()

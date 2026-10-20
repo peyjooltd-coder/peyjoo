@@ -4,7 +4,7 @@ import { fileURLToPath } from 'url'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const dbPath = path.join(__dirname, '../data/divar.db')
-const logo = '/logo.jpeg?v=5'
+const logo = '/logo.jpeg?v=6'
 
 const db = new Database(dbPath)
 db.pragma('foreign_keys = OFF')

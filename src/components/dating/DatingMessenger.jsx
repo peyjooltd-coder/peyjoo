@@ -161,7 +161,7 @@ export default function DatingMessenger({
           </button>
           <div className="dating-msg-peer">
             <img
-              src={activeThread.otherAvatar || `/logo.jpeg?v=5`}
+              src={activeThread.otherAvatar || `/logo.jpeg?v=6`}
               alt=""
             />
             <div>
@@ -265,7 +265,7 @@ export default function DatingMessenger({
               onClick={() => openThread(th.id)}
             >
               <img
-                src={th.otherAvatar || `/logo.jpeg?v=5`}
+                src={th.otherAvatar || `/logo.jpeg?v=6`}
                 alt=""
               />
               <div className="dating-msg-thread-meta">

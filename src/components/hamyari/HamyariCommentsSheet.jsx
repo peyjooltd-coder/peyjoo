@@ -58,7 +58,7 @@ export default function HamyariCommentsSheet({
               return (
                 <div key={c.id} className="news-comment-row">
                   <img
-                    src={c.authorAvatar || `/logo.jpeg?v=5`}
+                    src={c.authorAvatar || `/logo.jpeg?v=6`}
                     alt=""
                   />
                   <div className="flex-1 min-w-0">
@@ -85,7 +85,7 @@ export default function HamyariCommentsSheet({
 
         <div className="news-comment-compose">
           <img
-            src={user?.avatar || '/logo.jpeg?v=5'}
+            src={user?.avatar || '/logo.jpeg?v=6'}
             alt=""
             className="news-comment-me"
           />

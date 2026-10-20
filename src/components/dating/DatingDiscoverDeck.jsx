@@ -5,7 +5,7 @@ import { useI18n } from '../../context/I18nContext'
 function photoOf(person) {
   if (person?.photos?.[0]) return person.photos[0]
   if (person?.avatar) return person.avatar
-  return `/logo.jpeg?v=5`
+  return `/logo.jpeg?v=6`
 }
 
 /**

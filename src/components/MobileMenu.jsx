@@ -38,7 +38,7 @@ export default function MobileMenu({ open, onClose }) {
       <aside className="absolute inset-y-0 left-0 w-[min(100%,320px)] bg-divar-surface shadow-2xl flex flex-col animate-fade-up safe-area-top">
         <div className="flex items-center justify-between px-4 py-4 border-b border-divar-border-light">
           <div className="flex items-center gap-2.5">
-            <img src="/logo.jpeg?v=5" alt="PeyJoo" className="w-10 h-10 rounded-xl object-cover bg-white" />
+            <img src="/logo.jpeg?v=6" alt="PeyJoo" className="w-10 h-10 rounded-xl object-cover bg-white" />
             <div>
               <p className="font-bold text-divar-text text-sm">{lang === 'fa' ? 'پی جو' : 'PeyJoo'}</p>
               <p className="text-[10px] text-divar-muted">{lang === 'fa' ? 'دیوار ونکوور' : 'Divar Vancouver'}</p>

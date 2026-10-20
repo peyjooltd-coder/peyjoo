@@ -89,8 +89,8 @@ function circleFeature(lat, lng, radiusM) {
 }
 
 function safeAvatar(url) {
-  const value = String(url || '/logo.jpeg?v=5').trim()
-  if (/^javascript:/i.test(value) || /^data:text/i.test(value)) return '/logo.jpeg?v=5'
+  const value = String(url || '/logo.jpeg?v=6').trim()
+  if (/^javascript:/i.test(value) || /^data:text/i.test(value)) return '/logo.jpeg?v=6'
   return value.replace(/"/g, '')
 }
 

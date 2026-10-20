@@ -551,7 +551,7 @@ export default function DatingPage() {
                       }}
                     >
                       <img
-                        src={p.photos?.[0] || p.avatar || `/logo.jpeg?v=5`}
+                        src={p.photos?.[0] || p.avatar || `/logo.jpeg?v=6`}
                         alt=""
                       />
                       <span>
@@ -693,7 +693,7 @@ export default function DatingPage() {
             {myProfile ? (
               <div className="dating-profile-card">
                 <img
-                  src={myProfile.avatar || user?.avatar || '/logo.jpeg?v=5'}
+                  src={myProfile.avatar || user?.avatar || '/logo.jpeg?v=6'}
                   alt=""
                   className="dating-profile-avatar"
                 />
@@ -780,7 +780,7 @@ export default function DatingPage() {
             <div className="dating-photo-editor">
               <span className="dating-photo-label">{t('datingProfilePhoto')}</span>
               <button type="button" className="dating-avatar-pick" onClick={() => avatarInputRef.current?.click()}>
-                <img src={form.avatar || '/logo.jpeg?v=5'} alt="" />
+                <img src={form.avatar || '/logo.jpeg?v=6'} alt="" />
                 <span>{t('datingChangePhoto')}</span>
               </button>
               <input
@@ -897,7 +897,7 @@ export default function DatingPage() {
                     onClick={() => toggleCrush(p.userId)}
                   >
                     <img
-                      src={p.avatar || `/logo.jpeg?v=5`}
+                      src={p.avatar || `/logo.jpeg?v=6`}
                       alt=""
                     />
                     <span>{p.displayName}</span>
@@ -930,11 +930,11 @@ export default function DatingPage() {
             <p className="fb-dating-match-kicker">{t('datingItsAMatch')}</p>
             <div className="fb-dating-match-avatars">
               <img
-                src={myProfile?.avatar || user?.avatar || '/logo.jpeg?v=5'}
+                src={myProfile?.avatar || user?.avatar || '/logo.jpeg?v=6'}
                 alt=""
               />
               <img
-                src={matchModal.person.avatar || `/logo.jpeg?v=5`}
+                src={matchModal.person.avatar || `/logo.jpeg?v=6`}
                 alt=""
               />
             </div>

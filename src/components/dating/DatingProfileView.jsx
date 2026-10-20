@@ -41,7 +41,7 @@ function profilePhotos(person) {
     seen.add(src)
     out.push(src)
   }
-  if (!out.length) out.push(`/logo.jpeg?v=5`)
+  if (!out.length) out.push(`/logo.jpeg?v=6`)
   return out
 }
 
