@@ -1,9 +1,12 @@
 import { Heart, Bell, Scale, Trash2, X } from 'lucide-react'
 import { useApp } from '../context/AppContext'
+import { useI18n } from '../context/I18nContext'
 import ListingCard from './ListingCard'
+import { listingTitle, listingPriceLabel, listingCondition } from '../lib/localizeListing'
 
 export default function SavedPanel() {
   const { savedListings, compareListings, toggleCompare, alerts, removeAlert } = useApp()
+  const { t, lang } = useI18n()
 
   return (
     <div className="space-y-8">
@@ -20,13 +23,13 @@ export default function SavedPanel() {
                   <X className="w-4 h-4" />
                 </button>
                 <img src={l.image} alt="" className="w-full h-28 object-cover rounded-lg mb-3" />
-                <p className="text-divar-red font-bold">{l.priceLabel}</p>
-                <p className="text-sm font-medium text-divar-text mt-1 line-clamp-2">{l.title}</p>
+                <p className="text-divar-red font-bold">{listingPriceLabel(l, lang, t)}</p>
+                <p className="text-sm font-medium text-divar-text mt-1 line-clamp-2" dir="auto">{listingTitle(l, lang)}</p>
                 <div className="grid grid-cols-2 gap-2 mt-3 pt-3 border-t border-divar-border text-[11px] text-divar-muted">
                   <span>★ {l.sellerRating}</span>
-                  <span>{l.condition}</span>
+                  <span>{listingCondition(l, lang, t)}</span>
                   <span>{l.city}</span>
-                  <span>{l.views} views</span>
+                  <span>{l.views} {t('views')}</span>
                 </div>
               </div>
             ))}

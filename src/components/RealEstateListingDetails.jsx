@@ -18,9 +18,10 @@ import {
   realEstateSubLabel,
 } from '../data/realEstateSubcategories'
 import { cityLabel } from '../data/canadaCities'
+import { listingPriceLabel } from '../lib/localizeListing'
 
 function inferDefaults(listing) {
-  const text = `${listing.title || ''} ${listing.description || ''}`.toLowerCase()
+  const text = `${listing.title || ''} ${listing.titleEn || ''} ${listing.titleFa || ''} ${listing.description || ''} ${listing.descriptionEn || ''} ${listing.descriptionFa || ''}`.toLowerCase()
   const attrs = listing.attributes || {}
   const roomsFromTitle = text.match(/(\d+)\s*خواب|(\d+)\s*bed|studio|سوئیت/)
   let rooms = attrs.rooms
@@ -297,7 +298,7 @@ export default function RealEstateListingDetails({ listing, onOpenSafety }) {
         </div>
       ) : (
         <div className="re-sale-price">
-          <p className="re-rent-value">{listing.priceLabel || formatMoney(listing.price, lang)}</p>
+          <p className="re-rent-value">{listingPriceLabel(listing, lang, t) || formatMoney(listing.price, lang)}</p>
           <p className="re-rent-label">{t('reSalePrice')}</p>
         </div>
       )}

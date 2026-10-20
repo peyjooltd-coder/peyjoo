@@ -41,6 +41,7 @@ import TransportSubcategoryGate from '../components/TransportSubcategoryGate'
 import RealEstateDetailFields from '../components/RealEstateDetailFields'
 import { EMPTY_RE_DETAIL } from '../data/realEstateDetailFields'
 import { formatListingRelativeTime, groupListingsByDay } from '../lib/listingTime'
+import { listingTitle, listingPriceLabel } from '../lib/localizeListing'
 
 const SORT_IDS = ['newest', 'price-asc', 'price-desc', 'popular']
 
@@ -128,13 +129,13 @@ export default function ExplorePage() {
     () =>
       filteredListings.map((l) => ({
         id: l.id,
-        title: l.title,
-        priceLabel: l.priceLabel,
+        title: listingTitle(l, lang),
+        priceLabel: listingPriceLabel(l, lang, t),
         image: l.image,
         timeLabel: formatListingRelativeTime(l, lang),
         listing: l,
       })),
-    [filteredListings, lang],
+    [filteredListings, lang, t],
   )
 
   const dayGroups = useMemo(() => {
@@ -792,8 +793,8 @@ export default function ExplorePage() {
                 {group.items.map((l) => (
                   <FeedListingCard
                     key={l.id}
-                    title={l.title}
-                    priceLabel={l.priceLabel}
+                    title={listingTitle(l, lang)}
+                    priceLabel={listingPriceLabel(l, lang, t)}
                     media={normalizeMedia(l.media?.length ? l.media : l.images)}
                     image={listingCoverUrl(l) || l.image}
                     timeLabel={formatListingRelativeTime(l, lang)}

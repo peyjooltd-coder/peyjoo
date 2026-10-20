@@ -1,7 +1,9 @@
 import { Bookmark, MapPin, Eye, BadgeCheck, Scale, Clock, ChevronRight } from 'lucide-react'
 import { useApp } from '../context/AppContext'
+import { useI18n } from '../context/I18nContext'
 import { listingCoverUrl } from '../lib/imageCompress'
 import { userAvatar } from '../lib/defaultAvatar'
+import { listingTitle, listingPriceLabel, listingTimeLabel } from '../lib/localizeListing'
 
 function ListingBadges({ badges }) {
   if (!badges?.length) return null
@@ -26,9 +28,13 @@ function ListingBadges({ badges }) {
 
 export default function ListingCard({ listing, layout = 'grid', premium = false }) {
   const { savedIds, toggleSave, openListing, compareIds, toggleCompare } = useApp()
+  const { t, lang } = useI18n()
   const isSaved = savedIds.has(Number(listing.id))
   const inCompare = compareIds.includes(Number(listing.id))
   const cover = listingCoverUrl(listing) || listing.image
+  const title = listingTitle(listing, lang)
+  const price = listingPriceLabel(listing, lang, t)
+  const time = listingTimeLabel(listing, lang, t)
 
   if (layout === 'list') {
     return (
@@ -43,15 +49,15 @@ export default function ListingCard({ listing, layout = 'grid', premium = false 
         </div>
         <div className="flex-1 min-w-0 flex flex-col justify-between py-0.5">
           <div>
-            <p className="text-divar-red font-extrabold text-xl tracking-tight">{listing.priceLabel}</p>
-            <h3 className="font-semibold text-divar-text text-[15px] mt-2 line-clamp-2 leading-snug group-hover:text-divar-red transition-colors">
-              {listing.title}
+            <p className="text-divar-red font-extrabold text-xl tracking-tight">{price}</p>
+            <h3 className="font-semibold text-divar-text text-[15px] mt-2 line-clamp-2 leading-snug group-hover:text-divar-red transition-colors" dir="auto">
+              {title}
             </h3>
           </div>
           <div className="flex items-center justify-between mt-3">
             <p className="text-xs text-divar-muted flex items-center gap-1 font-medium">
               <MapPin className="w-3.5 h-3.5 text-divar-red/70" />
-              {listing.neighborhood} · {listing.time}
+              {listing.neighborhood} · {time}
             </p>
             <div className="flex items-center gap-2">
               {listing.sellerVerified && <BadgeCheck className="w-4 h-4 text-divar-red" />}
@@ -72,7 +78,7 @@ export default function ListingCard({ listing, layout = 'grid', premium = false 
       <div className="relative aspect-[4/3] bg-divar-bg overflow-hidden">
         <img
           src={cover}
-          alt={listing.title}
+          alt={title}
           className="w-full h-full object-cover group-hover:scale-[1.04] transition-transform duration-500 ease-out"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
@@ -104,13 +110,13 @@ export default function ListingCard({ listing, layout = 'grid', premium = false 
         </div>
 
         <div className="absolute bottom-0 inset-x-0 p-3 pt-8 bg-gradient-to-t from-black/70 to-transparent">
-          <p className="text-white font-extrabold text-lg tracking-tight drop-shadow-sm">{listing.priceLabel}</p>
+          <p className="text-white font-extrabold text-lg tracking-tight drop-shadow-sm">{price}</p>
         </div>
       </div>
 
       <div className="p-4">
-        <h3 className="font-semibold text-divar-text text-[14px] line-clamp-2 leading-snug min-h-[2.75rem] group-hover:text-divar-red transition-colors">
-          {listing.title}
+        <h3 className="font-semibold text-divar-text text-[14px] line-clamp-2 leading-snug min-h-[2.75rem] group-hover:text-divar-red transition-colors" dir="auto">
+          {title}
         </h3>
         <div className="flex items-center justify-between mt-3 pt-3 border-t border-divar-border-light">
           <div className="flex items-center gap-2 min-w-0">

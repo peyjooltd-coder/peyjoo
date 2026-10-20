@@ -4,10 +4,11 @@ import { useI18n } from '../context/I18nContext'
 import MobileBackButton from '../components/mobile/MobileBackButton'
 import FeedListingCard from '../components/mobile/FeedListingCard'
 import { listingCoverUrl, normalizeMedia } from '../lib/imageCompress'
+import { listingTitle, listingPriceLabel, listingTimeLabel } from '../lib/localizeListing'
 
 export default function SavedPage() {
   const { savedListings, openListing, toggleSave } = useApp()
-  const { t } = useI18n()
+  const { t, lang } = useI18n()
 
   return (
     <div className="mobile-page p-4">
@@ -26,11 +27,11 @@ export default function SavedPage() {
           {savedListings.map((l) => (
             <div key={l.id} className="relative">
               <FeedListingCard
-                title={l.title}
-                priceLabel={l.priceLabel}
+                title={listingTitle(l, lang)}
+                priceLabel={listingPriceLabel(l, lang, t)}
                 image={listingCoverUrl(l) || l.image}
                 media={normalizeMedia(l.media?.length ? l.media : l.images)}
-                timeLabel={l.time}
+                timeLabel={listingTimeLabel(l, lang, t)}
                 hasVideo={l.hasVideo || (l.media || []).some((m) => m.type === 'video')}
                 isSaved
                 onToggleSave={() => toggleSave(l.id)}

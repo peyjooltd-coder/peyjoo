@@ -22,6 +22,13 @@ import MobileBottomSheet from '../components/mobile/MobileBottomSheet'
 import { listingCoverUrl, normalizeMedia } from '../lib/imageCompress'
 import { useSwipeGallery } from '../hooks/useSwipeGallery'
 import { scrollAppToTop } from '../lib/shareListing'
+import {
+  listingTitle,
+  listingDescription,
+  listingPriceLabel,
+  listingCondition,
+  listingTimeLabel,
+} from '../lib/localizeListing'
 
 export default function ListingDetailPage() {
   const {
@@ -182,15 +189,15 @@ export default function ListingDetailPage() {
 
         <div className="detail-body">
           {!isRealEstate && (
-            <p className="detail-price">{selectedListing.priceLabel}</p>
+            <p className="detail-price">{listingPriceLabel(selectedListing, lang, t)}</p>
           )}
-          <h1 className="detail-title">{selectedListing.title}</h1>
+          <h1 className="detail-title" dir="auto">{listingTitle(selectedListing, lang)}</h1>
 
           {!isRealEstate && (
             <div className="detail-meta-row">
               <span>
                 <MapPin className="w-4 h-4" />
-                {selectedListing.time}
+                {listingTimeLabel(selectedListing, lang, t)}
                 {placeLabel ? ` · ${placeLabel}` : ''}
               </span>
               <span>
@@ -217,7 +224,7 @@ export default function ListingDetailPage() {
 
           <section className="detail-section">
             <h2>{t('description')}</h2>
-            <p className="detail-description-text" dir="auto">{selectedListing.description}</p>
+            <p className="detail-description-text" dir="auto">{listingDescription(selectedListing, lang)}</p>
           </section>
 
           {isOwner && (
@@ -230,7 +237,7 @@ export default function ListingDetailPage() {
           {!isRealEstate && (
             <div className="detail-facts">
               {[
-                { label: t('condition'), value: selectedListing.condition },
+                { label: t('condition'), value: listingCondition(selectedListing, lang, t) },
                 { label: t('category'), value: t(`cats.${selectedListing.category}`) },
               ].map(({ label, value }) => (
                 <div key={label} className="detail-fact">
@@ -275,8 +282,8 @@ export default function ListingDetailPage() {
               {similar.map((l) => (
                 <FeedListingCard
                   key={l.id}
-                  title={l.title}
-                  priceLabel={l.priceLabel}
+                  title={listingTitle(l, lang)}
+                  priceLabel={listingPriceLabel(l, lang, t)}
                   image={listingCoverUrl(l) || l.image}
                   media={normalizeMedia(l.media?.length ? l.media : l.images)}
                   hasVideo={l.hasVideo || (l.media || []).some((m) => m.type === 'video')}

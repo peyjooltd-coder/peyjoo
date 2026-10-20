@@ -38,7 +38,7 @@ export default function ListingShareSheet({ listing, open, onClose }) {
             <X className="w-5 h-5" />
           </button>
         </div>
-        <p className="share-sheet-preview">{listing.title}</p>
+        <p className="share-sheet-preview" dir="auto">{payload.title}</p>
         <ul className="share-sheet-list">
           {canNative && (
             <li>

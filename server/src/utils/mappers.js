@@ -45,6 +45,8 @@ export function rowToListing(row, { isMine = false, mode = 'full' } = {}) {
       id: row.id,
       userId: row.user_id,
       title: row.title,
+      titleEn: row.title_en || '',
+      titleFa: row.title_fa || '',
       category: row.category,
       price: row.price,
       priceLabel: row.price_label,
@@ -55,6 +57,8 @@ export function rowToListing(row, { isMine = false, mode = 'full' } = {}) {
       media: cardMedia,
       hasVideo,
       description: row.description,
+      descriptionEn: row.description_en || '',
+      descriptionFa: row.description_fa || '',
       condition: row.condition,
       seller: row.seller_name,
       sellerAvatar: resolveUserAvatar(row.seller_avatar),
@@ -82,6 +86,8 @@ export function rowToListing(row, { isMine = false, mode = 'full' } = {}) {
     id: row.id,
     userId: row.user_id,
     title: row.title,
+    titleEn: row.title_en || '',
+    titleFa: row.title_fa || '',
     category: row.category,
     price: row.price,
     priceLabel: row.price_label,
@@ -92,6 +98,8 @@ export function rowToListing(row, { isMine = false, mode = 'full' } = {}) {
     media,
     hasVideo,
     description: row.description,
+    descriptionEn: row.description_en || '',
+    descriptionFa: row.description_fa || '',
     condition: row.condition,
     seller: row.seller_name,
     sellerAvatar: resolveUserAvatar(row.seller_avatar),
@@ -126,9 +134,18 @@ export function listingInputToRow(input, userId) {
       return item
     }).filter(Boolean)
 
+  const title = String(input.title || '').trim()
+  const description = String(input.description || '').trim()
+  const titleEn = String(input.titleEn ?? input.title_en ?? '').trim()
+  const titleFa = String(input.titleFa ?? input.title_fa ?? '').trim()
+  const descriptionEn = String(input.descriptionEn ?? input.description_en ?? '').trim()
+  const descriptionFa = String(input.descriptionFa ?? input.description_fa ?? '').trim()
+
   return {
     user_id: userId,
-    title: input.title,
+    title,
+    title_en: titleEn || (!/[\u0600-\u06FF]/.test(title) ? title : ''),
+    title_fa: titleFa || (/[\u0600-\u06FF]/.test(title) ? title : ''),
     category: input.category,
     price,
     price_label: input.priceLabel || (price ? `$${price.toLocaleString()}` : 'Contact for price'),
@@ -142,7 +159,9 @@ export function listingInputToRow(input, userId) {
       return poster || ''
     })(),
     images_json: JSON.stringify(media.slice(0, 8)),
-    description: input.description || '',
+    description,
+    description_en: descriptionEn || (!/[\u0600-\u06FF]/.test(description) ? description : ''),
+    description_fa: descriptionFa || (/[\u0600-\u06FF]/.test(description) ? description : ''),
     condition: input.condition || 'Good',
     seller_name: input.seller || 'You',
     seller_avatar: resolveUserAvatar(input.sellerAvatar),

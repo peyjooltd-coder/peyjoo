@@ -1,5 +1,7 @@
 /** Share helpers + in-app destinations (no auto-WhatsApp). */
 
+import { listingTitle, listingDescription, listingPriceLabel } from './localizeListing'
+
 export function listingShareUrl(listingId) {
   // Hits API (via Vite /api proxy) so WhatsApp/Telegram can read Open Graph tags
   return `${window.location.origin}/api/share/ad/${listingId}`
@@ -14,12 +16,12 @@ export function listingAppUrl(listingId) {
 
 export function listingShareText(listing, lang = 'fa') {
   const parts = [
-    listing.title,
-    listing.priceLabel,
+    listingTitle(listing, lang),
+    listingPriceLabel(listing, lang),
     listing.neighborhood && listing.city
-      ? `${listing.neighborhood}، ${listing.city}`
+      ? `${listing.neighborhood}${lang === 'fa' ? '، ' : ', '}${listing.city}`
       : (listing.city || ''),
-    listing.description,
+    listingDescription(listing, lang),
   ].filter(Boolean)
   const body = parts.join('\n')
   const site = lang === 'fa' ? 'پی‌جو ونکوور' : 'PeyJoo Vancouver'
@@ -29,7 +31,7 @@ export function listingShareText(listing, lang = 'fa') {
 export function listingSharePayload(listing, lang = 'fa') {
   const url = listingShareUrl(listing.id)
   const text = listingShareText(listing, lang)
-  const title = listing.title || (lang === 'fa' ? 'آگهی پی‌جو' : 'PeyJoo listing')
+  const title = listingTitle(listing, lang) || (lang === 'fa' ? 'آگهی پی‌جو' : 'PeyJoo listing')
   return { title, text, url, full: `${text}\n${url}` }
 }
 

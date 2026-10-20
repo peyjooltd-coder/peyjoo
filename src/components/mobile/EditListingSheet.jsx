@@ -36,6 +36,11 @@ import {
   fileToMediaItem, MAX_MEDIA_ITEMS, MAX_VIDEO_ITEMS, normalizeMedia, mediaCoverUrl,
   extractVideoPoster,
 } from '../../lib/imageCompress'
+import {
+  bilingualFieldsFromInput,
+  listingTitle as localizedListingTitle,
+  listingDescription as localizedListingDescription,
+} from '../../lib/localizeListing'
 
 function SubChips({ label, options, value, onChange, lang }) {
   if (!options?.length) return null
@@ -99,9 +104,9 @@ export default function EditListingSheet({ listing, open, onClose }) {
 
   useEffect(() => {
     if (!listing || !open) return
-    setTitle(listing.title || '')
+    setTitle(localizedListingTitle(listing, lang) || listing.title || '')
     setPrice(String(listing.price ?? ''))
-    setDescription(listing.description || '')
+    setDescription(localizedListingDescription(listing, lang) || listing.description || '')
     setMedia(listingMediaList(listing))
     const hydrated = hydrateListingDetails(listing)
     // Prefer monthlyRent from attrs; fall back to listing.price for older rent ads
@@ -116,7 +121,7 @@ export default function EditListingSheet({ listing, open, onClose }) {
     setDetails(hydrated)
     setError('')
     setCoverPickerIdx(null)
-  }, [listing, open])
+  }, [listing, open, lang])
 
   if (!listing) return null
 
@@ -231,9 +236,23 @@ export default function EditListingSheet({ listing, open, onClose }) {
       const attributes = buildListingAttributes(category, form, normalized)
       const { price: nextPrice, priceLabel } = buildListingPrice(category, form, attributes, lang)
 
+      const bilingual = bilingualFieldsFromInput(
+        (title || listing.title).trim(),
+        description.trim(),
+        lang,
+      )
+      // Keep the other language if user only edited the active one
+      if (lang === 'fa') {
+        bilingual.titleEn = listing.titleEn || ''
+        bilingual.descriptionEn = listing.descriptionEn || ''
+      } else {
+        bilingual.titleFa = listing.titleFa || ''
+        bilingual.descriptionFa = listing.descriptionFa || ''
+      }
+
       const patch = {
-        title: (title || listing.title).trim(),
-        description: description.trim(),
+        ...bilingual,
+        lang,
         media: normalized,
         images: normalized,
         image: cover || '',

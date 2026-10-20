@@ -5,20 +5,22 @@ import { listingCoverUrl, isVideoUrl } from '../lib/imageCompress'
 import { listingMediaList } from './MediaSlide'
 import GallerySideNav from './GallerySideNav'
 import { useI18n } from '../context/I18nContext'
+import { listingTitle, listingPriceLabel } from '../lib/localizeListing'
 
 /**
  * Facebook Marketplace-style listing card (items / vehicles / jobs).
  */
 export default function FbMarketplaceListingCard({ listing, isSaved, onSave, onClick }) {
-  const { t } = useI18n()
+  const { t, lang } = useI18n()
   const slides = listingMediaList(listing)
   const [index, setIndex] = useState(0)
   const current = slides[index]
   const cover = current?.url || listingCoverUrl(listing) || listing.image
   const videoAsCover = current?.type === 'video' || (cover && isVideoUrl(cover))
   const location = [listing.city, listing.neighborhood].filter(Boolean).join(' · ')
-  const price = listing.priceLabel
-    || (listing.price === 0 ? (t('cats.free-stuff') === 'Free stuff' ? 'Free' : 'رایگان') : '')
+  const title = listingTitle(listing, lang)
+  const price = listingPriceLabel(listing, lang, t)
+    || (listing.price === 0 ? (lang === 'fa' ? 'رایگان' : 'Free') : '')
 
   return (
     <div className="fb-re-card">
@@ -27,7 +29,7 @@ export default function FbMarketplaceListingCard({ listing, isSaved, onSave, onC
           {videoAsCover ? (
             <video key={cover} src={cover} poster={current?.poster || undefined} className="fb-re-card-img" muted playsInline preload="metadata" />
           ) : cover ? (
-            <HdImage src={cover} alt={listing.title || ''} className="fb-re-card-img" />
+            <HdImage src={cover} alt={title || ''} className="fb-re-card-img" />
           ) : (
             <div className="fb-re-card-img fb-re-card-img-empty" aria-hidden />
           )}
@@ -37,7 +39,7 @@ export default function FbMarketplaceListingCard({ listing, isSaved, onSave, onC
       <button type="button" className="fb-re-card-hit" onClick={onClick}>
         <div className="fb-re-card-body">
           {price ? <p className="fb-re-card-price">{price}</p> : null}
-          {listing.title ? <p className="fb-re-card-title">{listing.title}</p> : null}
+          {title ? <p className="fb-re-card-title" dir="auto">{title}</p> : null}
           {location ? (
             <p className="fb-re-card-location">
               <MapPin className="w-3.5 h-3.5" />

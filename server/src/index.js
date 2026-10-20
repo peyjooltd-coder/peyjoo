@@ -6,6 +6,7 @@ import fs from 'fs'
 import { config } from './config.js'
 import { initDatabase } from './db/database.js'
 import { migrateInlineListingMedia } from './utils/migrateInlineMedia.js'
+import { backfillBilingualListings } from './utils/translate.js'
 import { errorHandler, notFound } from './middleware/error.js'
 import authRoutes from './routes/auth.js'
 import listingsRoutes from './routes/listings.js'
@@ -34,6 +35,12 @@ try {
 } catch (err) {
   console.warn('⚠ Media migration skipped:', err.message)
 }
+
+setTimeout(() => {
+  backfillBilingualListings().catch((err) => {
+    console.warn('⚠ Bilingual backfill skipped:', err.message)
+  })
+}, 2500)
 
 const app = express()
 

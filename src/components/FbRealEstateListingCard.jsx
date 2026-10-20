@@ -7,6 +7,7 @@ import GallerySideNav from './GallerySideNav'
 import { useI18n } from '../context/I18nContext'
 import { cityLabel } from '../data/canadaCities'
 import { inferBeds, inferBaths, inferIsRent } from '../data/fbMarketplaceRealEstate'
+import { listingTitle, listingPriceLabel } from '../lib/localizeListing'
 
 /**
  * Facebook Marketplace-style real-estate card:
@@ -27,7 +28,8 @@ export default function FbRealEstateListingCard({ listing, isSaved, onSave, onCl
   const attrs = listing.attributes || {}
   const area = attrs.area ? `${attrs.area} m²` : ''
   const isRent = inferIsRent(listing)
-  const label = listing.priceLabel || ''
+  const title = listingTitle(listing, lang)
+  const label = listingPriceLabel(listing, lang, t) || ''
   const alreadyHasRentHint = /اجاره|rent|\/\s*mo|\/\s*ماه|ودیعه|deposit/i.test(label)
   const priceSuffix = isRent && !alreadyHasRentHint ? (lang === 'fa' ? ' / ماه' : ' /mo') : ''
   const priceLine = `${label}${priceSuffix}`
@@ -41,7 +43,7 @@ export default function FbRealEstateListingCard({ listing, isSaved, onSave, onCl
           {videoAsCover ? (
             <video key={cover} src={cover} poster={current?.poster || undefined} className="fb-re-card-img" muted playsInline preload="metadata" />
           ) : cover ? (
-            <HdImage src={cover} alt={listing.title || ''} className="fb-re-card-img" />
+            <HdImage src={cover} alt={title || ''} className="fb-re-card-img" />
           ) : (
             <div className="fb-re-card-img fb-re-card-img-empty" aria-hidden />
           )}
@@ -73,9 +75,9 @@ export default function FbRealEstateListingCard({ listing, isSaved, onSave, onCl
               )}
             </p>
           )}
-          {(listing.title) && (
-            <p className="fb-re-card-title">{listing.title}</p>
-          )}
+          {title ? (
+            <p className="fb-re-card-title" dir="auto">{title}</p>
+          ) : null}
           {location && (
             <p className="fb-re-card-location">
               <MapPin className="w-3.5 h-3.5" />

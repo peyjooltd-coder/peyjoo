@@ -5,6 +5,7 @@ import { authRequired, optionalAuth } from '../middleware/auth.js'
 import { rowToListing, listingInputToRow } from '../utils/mappers.js'
 import { normalizeMediaList, parseIncomingMedia, mediaCoverUrl } from '../utils/media.js'
 import { persistMediaList, persistDataUrl } from '../utils/persistMedia.js'
+import { ensureBilingualContent } from '../utils/translate.js'
 import { config } from '../config.js'
 
 const router = Router()
@@ -96,9 +97,14 @@ const createSchema = z.object({
   condition: z.string().optional(),
   attributes: z.record(z.any()).optional(),
   features: z.array(z.string()).optional(),
+  titleEn: z.string().optional(),
+  titleFa: z.string().optional(),
+  descriptionEn: z.string().optional(),
+  descriptionFa: z.string().optional(),
+  lang: z.enum(['en', 'fa']).optional(),
 })
 
-router.post('/', authRequired, (req, res) => {
+router.post('/', authRequired, async (req, res) => {
   const parsed = createSchema.safeParse(req.body)
   if (!parsed.success) return res.status(400).json({ error: parsed.error.flatten() })
 
@@ -112,12 +118,22 @@ router.post('/', authRequired, (req, res) => {
     cover = persistDataUrl(cover, { folder: 'listings', basename: `${draftId}-cover` }) || '/listings/phone.jpg'
   }
 
-  const isExchange = parsed.data.category === 'exchange'
   const status = 'pending'
+
+  const bilingual = await ensureBilingualContent({
+    title: parsed.data.title,
+    description: parsed.data.description || '',
+    titleEn: parsed.data.titleEn,
+    titleFa: parsed.data.titleFa,
+    descriptionEn: parsed.data.descriptionEn,
+    descriptionFa: parsed.data.descriptionFa,
+    lang: parsed.data.lang,
+  })
 
   const row = listingInputToRow(
     {
       ...parsed.data,
+      ...bilingual,
       seller: req.user.name,
       sellerAvatar: req.user.avatar,
       image: cover,
@@ -135,7 +151,7 @@ router.post('/', authRequired, (req, res) => {
   res.status(201).json({ listing })
 })
 
-router.patch('/:id', authRequired, (req, res) => {
+router.patch('/:id', authRequired, async (req, res) => {
   const id = Number(req.params.id)
   const existing = getDb().prepare('SELECT * FROM listings WHERE id = ?').get(id)
   if (!existing) return res.status(404).json({ error: 'Not found' })
@@ -143,7 +159,6 @@ router.patch('/:id', authRequired, (req, res) => {
 
   const updates = []
   const values = {}
-  if (req.body.title) { updates.push('title = @title'); values.title = req.body.title }
 
   // Only admins may set status directly. Owner content edits go back to pending below.
   if (req.body.status && isAdminRequest(req)) {
@@ -163,10 +178,36 @@ router.patch('/:id', authRequired, (req, res) => {
     values.price_label = req.body.priceLabel
     contentChanged = true
   }
-  if (req.body.title) contentChanged = true
-  if (req.body.description !== undefined) {
-    updates.push('description = @description')
-    values.description = req.body.description
+
+  const titleTouched = req.body.title != null || req.body.titleEn != null || req.body.titleFa != null
+  const descTouched = req.body.description !== undefined
+    || req.body.descriptionEn != null
+    || req.body.descriptionFa != null
+
+  if (titleTouched || descTouched) {
+    const bilingual = await ensureBilingualContent({
+      title: req.body.title ?? existing.title,
+      description: req.body.description !== undefined ? req.body.description : (existing.description || ''),
+      titleEn: req.body.titleEn ?? existing.title_en,
+      titleFa: req.body.titleFa ?? existing.title_fa,
+      descriptionEn: req.body.descriptionEn ?? existing.description_en,
+      descriptionFa: req.body.descriptionFa ?? existing.description_fa,
+      lang: req.body.lang,
+    })
+    updates.push(
+      'title = @title',
+      'title_en = @title_en',
+      'title_fa = @title_fa',
+      'description = @description',
+      'description_en = @description_en',
+      'description_fa = @description_fa',
+    )
+    values.title = bilingual.title
+    values.title_en = bilingual.titleEn
+    values.title_fa = bilingual.titleFa
+    values.description = bilingual.description
+    values.description_en = bilingual.descriptionEn
+    values.description_fa = bilingual.descriptionFa
     contentChanged = true
   }
   if (req.body.attributes) {

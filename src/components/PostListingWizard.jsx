@@ -37,6 +37,7 @@ import MobileBottomSheet from './mobile/MobileBottomSheet'
 import VideoCoverPicker from './VideoCoverPicker'
 import MediaUploadProgress from './MediaUploadProgress'
 import PriceNegotiableToggle from './PriceNegotiableToggle'
+import { bilingualFieldsFromInput } from '../lib/localizeListing'
 
 function emptyPostForm(seedCategory = '') {
   return {
@@ -520,17 +521,18 @@ export default function PostListingWizard() {
                 monthlyRent: form.monthlyRent,
               }, lang)
               : (form.price ? `$${Number(form.price).toLocaleString()}` : (lang === 'fa' ? 'توافقی' : 'Negotiable'))
+      const bilingual = bilingualFieldsFromInput(form.title.trim(), form.description, lang)
       await addListing({
-        title: form.title.trim(),
+        ...bilingual,
+        lang,
         category: form.category,
-        city: user?.city || 'ونکوور',
-        neighborhood: cityLabel(user?.city || 'ونکوور', 'en'),
+        city: user?.city || (lang === 'fa' ? 'ونکوور' : 'Vancouver'),
+        neighborhood: cityLabel(user?.city || (lang === 'fa' ? 'ونکوور' : 'Vancouver'), lang),
         price: listingPrice,
         priceLabel: listingPriceLabel,
         image: cover || undefined,
         images: media,
         media,
-        description: form.description,
         seller: user?.name || (lang === 'fa' ? 'شما' : 'You'),
         sellerAvatar: userAvatar(user?.avatar),
         condition: 'Like New',

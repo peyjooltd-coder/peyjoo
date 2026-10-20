@@ -8,6 +8,7 @@ import GlassCategoryIcon from '../components/GlassCategoryIcon'
 import PromoSlider from '../components/PromoSlider'
 import { listingSortTs } from '../lib/listingTime'
 import { listingCoverUrl, normalizeMedia } from '../lib/imageCompress'
+import { listingTitle, listingPriceLabel } from '../lib/localizeListing'
 
 /** Home categories: first row of marketplace cats, plus Home Market */
 const HOME_CAT_SLOTS = [
@@ -20,7 +21,7 @@ export default function HomePage() {
     setViewTab, openPostModal, openCategory, openListing, openNewestListings, listings,
     savedIds, toggleSave,
   } = useApp()
-  const { t } = useI18n()
+  const { t, lang } = useI18n()
 
   const featured = useMemo(() => {
     const sorted = listings.filter((l) => l.status === 'active').sort((a, b) => {
@@ -81,8 +82,8 @@ export default function HomePage() {
           {featured.map((ad) => (
             <FeaturedAdCard
               key={ad.id}
-              title={ad.title}
-              priceLabel={ad.priceLabel}
+              title={listingTitle(ad, lang)}
+              priceLabel={listingPriceLabel(ad, lang, t)}
               image={listingCoverUrl(ad) || ad.image}
               media={normalizeMedia(ad.media?.length ? ad.media : ad.images)}
               hasVideo={ad.hasVideo || (ad.media || []).some((m) => m.type === 'video')}

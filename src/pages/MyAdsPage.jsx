@@ -5,6 +5,7 @@ import { useI18n } from '../context/I18nContext'
 import { apiClient } from '../api/client'
 import MobileBackButton from '../components/mobile/MobileBackButton'
 import EditListingSheet from '../components/mobile/EditListingSheet'
+import { listingTitle, listingPriceLabel } from '../lib/localizeListing'
 
 export default function MyAdsPage() {
   const { myListings, openListing, openPostModal, deleteMyListing } = useApp()
@@ -65,8 +66,8 @@ export default function MyAdsPage() {
             <li key={l.id} className="category-row-card !min-h-0 !p-3">
               <img src={l.image} alt="" className="w-16 h-16 rounded-lg object-cover shrink-0" />
               <div className="flex-1 min-w-0">
-                <p className="font-bold text-sm line-clamp-2">{l.title}</p>
-                <p className="text-divar-red font-extrabold text-sm mt-1">{l.priceLabel}</p>
+                <p className="font-bold text-sm line-clamp-2" dir="auto">{listingTitle(l, lang)}</p>
+                <p className="text-divar-red font-extrabold text-sm mt-1">{listingPriceLabel(l, lang, t)}</p>
                 <p className="text-xs text-amber-700 mt-1 font-bold">
                   {tab === 'rejected'
                     ? (fa ? 'تأیید نشده' : 'Not approved')

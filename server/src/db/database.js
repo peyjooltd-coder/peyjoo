@@ -35,6 +35,53 @@ export function initDatabase() {
     db.exec('ALTER TABLE users ADD COLUMN exchange_trusted INTEGER DEFAULT 0')
   }
 
+  // Bilingual listing content (EN / FA)
+  const listingCols = db.prepare('PRAGMA table_info(listings)').all().map((c) => c.name)
+  const bilingualListingCols = [
+    ['title_en', 'TEXT'],
+    ['title_fa', 'TEXT'],
+    ['description_en', 'TEXT'],
+    ['description_fa', 'TEXT'],
+  ]
+  for (const [name, type] of bilingualListingCols) {
+    if (!listingCols.includes(name)) {
+      db.exec(`ALTER TABLE listings ADD COLUMN ${name} ${type}`)
+    }
+  }
+  // Backfill from legacy single-language title/description
+  try {
+    db.exec(`
+      UPDATE listings
+      SET title_fa = title
+      WHERE (title_fa IS NULL OR TRIM(title_fa) = '')
+        AND title IS NOT NULL
+        AND title GLOB '*[آ-ی]*'
+    `)
+    db.exec(`
+      UPDATE listings
+      SET title_en = title
+      WHERE (title_en IS NULL OR TRIM(title_en) = '')
+        AND title IS NOT NULL
+        AND title NOT GLOB '*[آ-ی]*'
+    `)
+    db.exec(`
+      UPDATE listings
+      SET description_fa = description
+      WHERE (description_fa IS NULL OR TRIM(description_fa) = '')
+        AND description IS NOT NULL AND TRIM(description) != ''
+        AND description GLOB '*[آ-ی]*'
+    `)
+    db.exec(`
+      UPDATE listings
+      SET description_en = description
+      WHERE (description_en IS NULL OR TRIM(description_en) = '')
+        AND description IS NOT NULL AND TRIM(description) != ''
+        AND description NOT GLOB '*[آ-ی]*'
+    `)
+  } catch {
+    /* older SQLite GLOB quirks — ignore */
+  }
+
   // Listing chat: peer user id so both buyer and seller get an inbox
   const chatCols = db.prepare('PRAGMA table_info(chat_threads)').all().map((c) => c.name)
   if (!chatCols.includes('other_user_id')) {
