@@ -339,6 +339,22 @@ export default function AuthPage({ intent = 'default' }) {
                   ? 'کد تأیید به همین شماره ارسال می‌شود.'
                   : 'We will send a verification code to this number.'}
               </p>
+              <div className="auth-review-box">
+                <p className="auth-review-hint">{t('authReviewHint')}</p>
+                <button
+                  type="button"
+                  className="auth-review-fill"
+                  disabled={authLoading}
+                  onClick={() => {
+                    setPhone('6040000000')
+                    setAgreed(true)
+                    setLocalError(null)
+                    setAuthError?.(null)
+                  }}
+                >
+                  {t('demoLogin')}
+                </button>
+              </div>
               <label className="auth-legal">
                 <input
                   type="checkbox"

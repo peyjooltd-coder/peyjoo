@@ -1,5 +1,5 @@
 /** Numbers that skip Firebase SMS. Default OTP is 1234. */
-export const BYPASS_PHONES = ['09192047834', '09192047833', '6040000000']
+export const BYPASS_PHONES = ['09192047834', '09192047833', '6040000000', '6045550100']
 export const BYPASS_PHONE = BYPASS_PHONES[0]
 export const BYPASS_OTP = '1234'
 
