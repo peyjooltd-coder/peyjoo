@@ -8301,11 +8301,23 @@ body:has(.auth-gate-overlay) .mobile-bottom-nav-persian {
   text-align: center;
   margin-top: 4px;
 }
+.dating-profile-panel.is-empty,
+.fb-dating-my-profile.is-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  /* Keep card visually centered above bottom nav */
+  padding-bottom: calc(24px + env(safe-area-inset-bottom, 0px));
+}
 .dating-profile-empty {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 10px;
+  width: 100%;
+  max-width: 360px;
+  margin: 0;
 }
 .dating-profile-empty .home-btn-primary {
   flex: 0 0 auto;

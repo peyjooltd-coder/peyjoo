@@ -676,7 +676,7 @@ export default function DatingPage() {
         )}
 
         {tab === 'profile' && (
-          <div className="dating-profile-panel fb-dating-my-profile">
+          <div className={`dating-profile-panel fb-dating-my-profile${myProfile ? '' : ' is-empty'}`}>
             {myProfile ? (
               <div className="dating-profile-card">
                 <img
