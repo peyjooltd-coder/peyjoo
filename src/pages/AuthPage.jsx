@@ -148,7 +148,7 @@ export default function AuthPage({ intent = 'default' }) {
     }
     try {
       const check = await checkPhone(cleaned)
-      if (!isGoogleReviewPhone(cleaned)) {
+      if (!bypass) {
         if (flow === 'signin' && check?.isNewUser) {
           setLocalError(t('authNoAccountPhone'))
           return
