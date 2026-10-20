@@ -8301,23 +8301,33 @@ body:has(.auth-gate-overlay) .mobile-bottom-nav-persian {
   text-align: center;
   margin-top: 4px;
 }
+/* Empty create-profile card: pin to vertical center of the dating body */
 .dating-profile-panel.is-empty,
 .fb-dating-my-profile.is-empty {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  /* Keep card visually centered above bottom nav */
-  padding-bottom: calc(24px + env(safe-area-inset-bottom, 0px));
+  position: relative;
+  flex: 1 1 auto;
+  min-height: 0;
+  height: 100%;
+  overflow: hidden;
+  display: block;
+  padding: 0 14px;
+  padding-top: env(safe-area-inset-top, 0px);
 }
-.dating-profile-empty {
+.dating-profile-panel.is-empty .dating-profile-empty,
+.fb-dating-my-profile.is-empty .dating-profile-empty {
+  position: absolute;
+  left: 14px;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  margin: 0;
+  width: auto;
+  max-width: none;
+  box-sizing: border-box;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 10px;
-  width: 100%;
-  max-width: 360px;
-  margin: 0;
 }
 .dating-profile-empty .home-btn-primary {
   flex: 0 0 auto;
