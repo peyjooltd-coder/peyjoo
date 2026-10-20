@@ -466,20 +466,101 @@ router.delete('/account', authRequired, (req, res) => {
   const db = getDb()
   const userId = req.user.id
 
+  const runQuiet = (sql, ...params) => {
+    try {
+      db.prepare(sql).run(...params)
+    } catch {
+      /* table may not exist yet on older DBs */
+    }
+  }
+
   const tx = db.transaction(() => {
-    db.prepare('DELETE FROM chat_messages WHERE thread_id IN (SELECT id FROM chat_threads WHERE user_id = ?)').run(userId)
-    db.prepare('DELETE FROM chat_threads WHERE user_id = ?').run(userId)
-    db.prepare('DELETE FROM handshake_offers WHERE user_id = ?').run(userId)
-    db.prepare('DELETE FROM search_alerts WHERE user_id = ?').run(userId)
-    db.prepare('DELETE FROM saved_listings WHERE user_id = ?').run(userId)
-    db.prepare('DELETE FROM compare_listings WHERE user_id = ?').run(userId)
-    db.prepare("UPDATE listings SET status = 'deleted', updated_at = datetime('now') WHERE user_id = ?").run(userId)
-    db.prepare('DELETE FROM want_signals WHERE user_id = ?').run(userId)
+    const listingIds = db
+      .prepare('SELECT id FROM listings WHERE user_id = ?')
+      .all(userId)
+      .map((row) => row.id)
+
+    // Marketplace chat (as owner or peer)
+    runQuiet(
+      `DELETE FROM chat_messages WHERE thread_id IN (
+        SELECT id FROM chat_threads WHERE user_id = ? OR other_user_id = ?
+      )`,
+      userId,
+      userId,
+    )
+    runQuiet('DELETE FROM chat_threads WHERE user_id = ? OR other_user_id = ?', userId, userId)
+
+    // Dating
+    runQuiet(
+      `DELETE FROM dating_messages WHERE thread_id IN (
+        SELECT id FROM dating_threads WHERE user_id = ? OR other_user_id = ?
+      )`,
+      userId,
+      userId,
+    )
+    runQuiet('DELETE FROM dating_threads WHERE user_id = ? OR other_user_id = ?', userId, userId)
+    runQuiet('DELETE FROM dating_likes WHERE from_user_id = ? OR to_user_id = ?', userId, userId)
+    runQuiet('DELETE FROM dating_passes WHERE from_user_id = ? OR to_user_id = ?', userId, userId)
+    runQuiet('DELETE FROM dating_blocks WHERE user_id = ? OR blocked_user_id = ?', userId, userId)
+    runQuiet('DELETE FROM dating_secret_crush WHERE from_user_id = ? OR to_user_id = ?', userId, userId)
+    runQuiet('DELETE FROM dating_profiles WHERE user_id = ?', userId)
+
+    // Hamyari
+    runQuiet(
+      `DELETE FROM hamyari_messages WHERE thread_id IN (
+        SELECT id FROM hamyari_threads WHERE user_id = ? OR other_user_id = ?
+      )`,
+      userId,
+      userId,
+    )
+    runQuiet('DELETE FROM hamyari_threads WHERE user_id = ? OR other_user_id = ?', userId, userId)
+    runQuiet('DELETE FROM hamyari_likes WHERE user_id = ?', userId)
+    runQuiet('DELETE FROM hamyari_comments WHERE user_id = ?', userId)
+    runQuiet('DELETE FROM hamyari_notifications WHERE user_id = ?', userId)
+    runQuiet('DELETE FROM hamyari_posts WHERE user_id = ?', userId)
+
+    // Listing dependents (must clear before deleting listings / user)
+    if (listingIds.length) {
+      const placeholders = listingIds.map(() => '?').join(',')
+      runQuiet(`DELETE FROM saved_listings WHERE listing_id IN (${placeholders})`, ...listingIds)
+      runQuiet(`DELETE FROM compare_listings WHERE listing_id IN (${placeholders})`, ...listingIds)
+      runQuiet(`DELETE FROM listing_reports WHERE listing_id IN (${placeholders})`, ...listingIds)
+      runQuiet(`DELETE FROM handshake_offers WHERE listing_id IN (${placeholders})`, ...listingIds)
+      runQuiet(`DELETE FROM pulse_matches WHERE listing_id IN (${placeholders})`, ...listingIds)
+      runQuiet(
+        `DELETE FROM chat_messages WHERE thread_id IN (
+          SELECT id FROM chat_threads WHERE listing_id IN (${placeholders})
+        )`,
+        ...listingIds,
+      )
+      runQuiet(`DELETE FROM chat_threads WHERE listing_id IN (${placeholders})`, ...listingIds)
+    }
+
+    runQuiet('DELETE FROM handshake_offers WHERE user_id = ?', userId)
+    runQuiet('DELETE FROM search_alerts WHERE user_id = ?', userId)
+    runQuiet('DELETE FROM saved_listings WHERE user_id = ?', userId)
+    runQuiet('DELETE FROM compare_listings WHERE user_id = ?', userId)
+    runQuiet('DELETE FROM listing_reports WHERE user_id = ?', userId)
+    // Pulse matches that reference this user's wants (any listing)
+    runQuiet(
+      `DELETE FROM pulse_matches WHERE want_id IN (
+        SELECT id FROM want_signals WHERE user_id = ?
+      )`,
+      userId,
+    )
+    runQuiet('DELETE FROM want_signals WHERE user_id = ?', userId)
+    // Hard-delete listings so users.FK is not left dangling (soft-delete caused FK failures)
+    runQuiet('DELETE FROM listings WHERE user_id = ?', userId)
     db.prepare('DELETE FROM users WHERE id = ?').run(userId)
   })
 
-  tx()
-  res.json({ ok: true, message: 'Account deleted permanently' })
+  try {
+    tx()
+    res.json({ ok: true, message: 'Account deleted permanently' })
+  } catch (err) {
+    console.error('delete account failed', err)
+    res.status(500).json({ error: err.message || 'Could not delete account' })
+  }
 })
 
 export default router

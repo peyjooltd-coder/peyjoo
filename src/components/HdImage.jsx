@@ -19,6 +19,7 @@ export default function HdImage({
       loading={eager ? 'eager' : 'lazy'}
       decoding="async"
       fetchPriority={eager ? 'high' : 'auto'}
+      draggable={false}
       onError={onError}
       {...rest}
     />

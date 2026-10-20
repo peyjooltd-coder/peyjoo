@@ -137,7 +137,10 @@ function AppContent() {
             <button
               type="button"
               className="auth-gate-close"
-              onClick={closeAuth}
+              onClick={(e) => {
+                e.stopPropagation()
+                closeAuth()
+              }}
               aria-label={t('cancel')}
             >
               ×

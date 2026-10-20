@@ -1,11 +1,21 @@
 function resolveApiBase() {
   if (import.meta.env.VITE_API_URL) return import.meta.env.VITE_API_URL
 
+  // Capacitor native shell has no /api reverse-proxy; use production API.
+  if (typeof window !== 'undefined') {
+    const proto = window.location?.protocol || ''
+    if (proto === 'capacitor:' || proto === 'ionic:') {
+      return 'https://peyjoo.com/api'
+    }
+  }
+
   // Dev (Vite) and production (nginx / vite preview) both proxy /api on the same origin.
   return '/api'
 }
 
-const API_BASE = resolveApiBase()
+function apiBase() {
+  return resolveApiBase()
+}
 
 const TOKEN_KEY = 'divar_token'
 
@@ -25,7 +35,7 @@ export async function api(path, { method = 'GET', body, auth = true } = {}) {
     if (token) headers.Authorization = `Bearer ${token}`
   }
 
-  const res = await fetch(`${API_BASE}${path}`, {
+  const res = await fetch(`${apiBase()}${path}`, {
     method,
     headers,
     body: body ? JSON.stringify(body) : undefined,

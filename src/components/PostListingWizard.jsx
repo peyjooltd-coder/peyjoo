@@ -90,6 +90,17 @@ export default function PostListingWizard() {
   const videoRef = useRef(null)
 
   useEffect(() => {
+    if (!showPostModal) return undefined
+    const prev = document.body.style.overflow
+    document.body.style.overflow = 'hidden'
+    document.documentElement.classList.add('post-modal-open')
+    return () => {
+      document.body.style.overflow = prev
+      document.documentElement.classList.remove('post-modal-open')
+    }
+  }, [showPostModal])
+
+  useEffect(() => {
     if (!showPostModal) return
     const seeded = resolvePostCategoryFromBrowse(selectedCategory)
     const next = emptyPostForm(seeded)
@@ -535,9 +546,15 @@ export default function PostListingWizard() {
 
   return (
     <>
-      <div className="post-modal-overlay">
+      <div
+        className="post-modal-overlay"
+        role="presentation"
+        onClick={(e) => {
+          if (e.target === e.currentTarget) setShowPostModal(false)
+        }}
+      >
         <p className="post-modal-step-label">{t('postAd')}</p>
-        <div className="post-modal-card">
+        <div className="post-modal-card" data-keyboard-scroll>
           <header className="post-modal-header">
             <h2>{t('postAd')}</h2>
             <button type="button" onClick={() => setShowPostModal(false)} className="post-modal-close" aria-label={t('postAdClose')}>

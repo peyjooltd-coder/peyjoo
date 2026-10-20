@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import {
-  Search, ArrowRight, Send, Check, CheckCheck, Image as ImageIcon, MoreVertical, X,
+  Search, ArrowRight, Send, Check, CheckCheck, Image as ImageIcon, X,
 } from 'lucide-react'
 import { useApp } from '../context/AppContext'
 import { useI18n } from '../context/I18nContext'
@@ -37,7 +37,7 @@ export default function ChatPage() {
     openListing,
     listings,
     goBack,
-    viewHistory,
+    setViewTab,
   } = useApp()
   const { t, isRtl } = useI18n()
 
@@ -149,13 +149,19 @@ export default function ChatPage() {
     openListing(listing)
   }
 
-  /** Back from a thread: if chat was opened from an ad (or elsewhere), restore that screen. */
+  /** Leave an open thread and return to the inbox (never strand the user). */
   const leaveConversation = () => {
-    const prev = viewHistory.length >= 2 ? viewHistory[viewHistory.length - 2] : null
+    setDraft('')
+    setSendError(null)
     setActiveChatId(null)
-    if (prev && prev !== 'chat') {
-      goBack('home')
-    }
+  }
+
+  /** Leave chat entirely and go home (do not pop history — always land on home). */
+  const leaveChatToHome = () => {
+    setDraft('')
+    setSendError(null)
+    setActiveChatId(null)
+    setViewTab('home')
   }
 
   /* ── Conversation view ── */
@@ -190,8 +196,8 @@ export default function ChatPage() {
               <span className="tg-peer-status">{t('onlineListing')}</span>
             </span>
           </button>
-          <button type="button" className="tg-icon-btn" aria-label={t('options')}>
-            <MoreVertical className="w-5 h-5" />
+          <button type="button" className="tg-home-link" onClick={leaveChatToHome}>
+            {t('home')}
           </button>
         </header>
 
@@ -259,8 +265,15 @@ export default function ChatPage() {
             placeholder={t('messagePlaceholder')}
             value={draft}
             onChange={(e) => setDraft(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault()
+                send()
+              }
+            }}
             dir={isRtl ? 'rtl' : 'ltr'}
             autoComplete="off"
+            enterKeyHint="send"
             disabled={sending}
           />
           <button

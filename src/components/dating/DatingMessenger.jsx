@@ -209,8 +209,14 @@ export default function DatingMessenger({
             placeholder={t('messagePlaceholder')}
             dir={isRtl ? 'rtl' : 'ltr'}
             autoComplete="off"
+            enterKeyHint="send"
           />
-          <button type="submit" disabled={sending || !draft.trim()} aria-label={t('send')}>
+          <button
+            type="submit"
+            className={draft.trim() ? 'is-ready' : ''}
+            disabled={sending || !draft.trim()}
+            aria-label={t('send')}
+          >
             <Send className="w-5 h-5" />
           </button>
         </form>

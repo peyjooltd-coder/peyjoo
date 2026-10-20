@@ -147,10 +147,11 @@ export default function HamyariMessenger({
               <span>{t('hamyariMessengerHint')}</span>
             </div>
           </div>
-          <button type="button" className="hamyari-msg-menu-link" onClick={onBackToMenu}>
-            {t('hamyariBackToMenu')}
-          </button>
         </header>
+        <button type="button" className="hamyari-msg-back-bar" onClick={onBackToMenu}>
+          <ArrowRight className={`w-4 h-4 ${isRtl ? '' : 'rotate-180'}`} />
+          <span>{t('hamyariBackToMenu')}</span>
+        </button>
         <div className="hamyari-msg-messages" ref={listRef}>
           {(activeThread.messages || []).map((m) => (
             <div key={m.id} className={`hamyari-msg-bubble-row ${m.from === 'me' ? 'is-out' : 'is-in'}`}>
@@ -162,14 +163,27 @@ export default function HamyariMessenger({
           ))}
         </div>
         {error && <div className="hamyari-msg-error">{error}</div>}
-        <form className="hamyari-msg-composer" onSubmit={(e) => { e.preventDefault(); send() }}>
+        <form
+          className="hamyari-msg-composer"
+          onSubmit={(e) => {
+            e.preventDefault()
+            send()
+          }}
+        >
           <input
             value={draft}
             onChange={(e) => setDraft(e.target.value)}
             placeholder={t('messagePlaceholder')}
             dir={isRtl ? 'rtl' : 'ltr'}
+            autoComplete="off"
+            enterKeyHint="send"
           />
-          <button type="submit" disabled={sending || !draft.trim()} aria-label={t('send')}>
+          <button
+            type="submit"
+            className={`hamyari-msg-send ${draft.trim() ? 'is-ready' : ''}`}
+            disabled={sending || !draft.trim()}
+            aria-label={t('send')}
+          >
             <Send className="w-5 h-5" />
           </button>
         </form>

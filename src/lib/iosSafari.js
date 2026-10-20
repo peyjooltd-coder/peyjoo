@@ -18,12 +18,24 @@ export function initIosSafari() {
   root.dataset.platform = isAppleMobile ? 'ios' : 'other'
   if (isStandalone) root.classList.add('is-standalone')
 
+  const tabletMq = window.matchMedia('(min-width: 768px)')
+  const syncTabletClass = () => {
+    const isIpadUa = /iPad/.test(ua)
+      || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1)
+    const isTablet = tabletMq.matches || isIpadUa
+    root.classList.toggle('is-tablet', isTablet)
+    root.dataset.formFactor = isTablet ? 'tablet' : 'phone'
+  }
+  syncTabletClass()
+  tabletMq.addEventListener?.('change', syncTabletClass)
+
   const setViewportVars = () => {
     const vv = window.visualViewport
     const height = Math.round(vv?.height || window.innerHeight)
     const offsetTop = Math.round(vv?.offsetTop || 0)
     root.style.setProperty('--app-height', `${height}px`)
     root.style.setProperty('--vv-offset-top', `${offsetTop}px`)
+    syncTabletClass()
     if (isAppleMobile && (window.scrollX || window.scrollY)) {
       window.scrollTo(0, 0)
     }
@@ -31,7 +43,7 @@ export function initIosSafari() {
 
   const scrollFieldIntoView = (el) => {
     if (!(el instanceof HTMLElement)) return
-    const scroller = el.closest('.mobile-screen, .auth-gate-overlay, .mobile-sheet, [data-keyboard-scroll]')
+    const scroller = el.closest('.mobile-screen, .auth-gate-overlay, .mobile-sheet, .post-modal-overlay, .post-modal-card, [data-keyboard-scroll]')
     if (!scroller) return
     const pad = 24
     const scrollerRect = scroller.getBoundingClientRect()
@@ -67,6 +79,7 @@ export function initIosSafari() {
   }
 
   return () => {
+    tabletMq.removeEventListener?.('change', syncTabletClass)
     window.removeEventListener('resize', onResize)
     window.removeEventListener('orientationchange', onResize)
     window.visualViewport?.removeEventListener('resize', onResize)
