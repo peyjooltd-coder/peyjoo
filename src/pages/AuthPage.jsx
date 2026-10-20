@@ -344,6 +344,7 @@ export default function AuthPage({ intent = 'default' }) {
                   type="checkbox"
                   checked={agreed}
                   onChange={(e) => setAgreed(e.target.checked)}
+                  aria-checked={agreed}
                 />
                 <span>
                   {t('agreeTerms')}{' '}

@@ -34,19 +34,10 @@ export default function ListingDetailPage() {
   const [editOpen, setEditOpen] = useState(false)
   const [safetyOpen, setSafetyOpen] = useState(false)
   const [reportOpen, setReportOpen] = useState(false)
-  const [showStickyCta, setShowStickyCta] = useState(true)
   const galleryRef = useRef(null)
   const scrollRef = useRef(null)
-  const similarRef = useRef(null)
 
   const media = listingMediaList(selectedListing)
-  const similarCount = selectedListing
-    ? listings.filter((l) => (
-      l.category === selectedListing.category
-      && l.id !== selectedListing.id
-      && l.status === 'active'
-    )).slice(0, 4).length
-    : 0
 
   useEffect(() => {
     setImgIndex(0)
@@ -54,28 +45,10 @@ export default function ListingDetailPage() {
     setEditOpen(false)
     setSafetyOpen(false)
     setReportOpen(false)
-    setShowStickyCta(true)
     scrollAppToTop({ smooth: false })
     const el = scrollRef.current
     if (el) el.scrollTop = 0
   }, [selectedListing?.id])
-
-  useEffect(() => {
-    const root = scrollRef.current
-    const target = similarRef.current
-    if (!root || !target || similarCount === 0) {
-      setShowStickyCta(true)
-      return undefined
-    }
-    const io = new IntersectionObserver(
-      ([entry]) => {
-        setShowStickyCta(!entry.isIntersecting)
-      },
-      { root, threshold: 0.08 },
-    )
-    io.observe(target)
-    return () => io.disconnect()
-  }, [selectedListing?.id, similarCount])
 
   useSwipeGallery(galleryRef, {
     enabled: media.length > 1,
@@ -294,7 +267,7 @@ export default function ListingDetailPage() {
         )}
 
         {similar.length > 0 && (
-          <section className="mobile-section" ref={similarRef}>
+          <section className="mobile-section">
             <div className="mobile-section-head">
               <h3>{t('similarAds')}</h3>
             </div>
@@ -315,7 +288,8 @@ export default function ListingDetailPage() {
         )}
       </div>
 
-      {showStickyCta && !isOwner && (
+      {/* Always show chat CTA for buyers — do not hide when Similar ads are on-screen. */}
+      {!isOwner && (
         <div className="detail-sticky-bar detail-sticky-bar-fixed">
           <button
             type="button"

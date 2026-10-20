@@ -5095,11 +5095,38 @@ body:has(.auth-gate-overlay) .mobile-bottom-nav-persian {
   flex-direction: column;
   justify-content: center;
   gap: 12px;
-  padding: 28px 20px 40px;
+  padding: 28px 20px calc(28px + env(safe-area-inset-bottom, 0px));
+  max-width: 420px;
+  margin: 0 auto;
+  width: 100%;
+  box-sizing: border-box;
 }
 .dating-adult-gate h1 { margin: 0; font-size: 1.35rem; }
 .dating-adult-gate p { margin: 0; color: #475569; line-height: 1.6; }
-.dating-adult-gate label { display: flex; gap: 8px; align-items: flex-start; font-weight: 700; }
+.dating-adult-gate label {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+  font-weight: 700;
+}
+.dating-adult-gate label input {
+  margin-top: 3px;
+  flex: 0 0 auto;
+  width: 18px;
+  height: 18px;
+  accent-color: var(--color-divar-red);
+}
+.dating-adult-gate .post-submit-btn {
+  margin: 4px 0 0;
+  width: 100%;
+  flex: 0 0 auto;
+}
+.dating-adult-gate .home-btn-outline {
+  flex: 0 0 auto;
+  width: 100%;
+  min-height: 48px;
+  margin-top: 4px;
+}
 .auth-pro-submit {
   margin-top: 6px;
   border: none;
